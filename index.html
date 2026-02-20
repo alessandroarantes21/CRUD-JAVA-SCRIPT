@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Sistema de Clientes</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+.dark-mode {
+    background-color: #121212 !important;
+    color: white !important;
+}
+
+.dark-mode .card {
+    background-color: #1e1e1e;
+    color: white;
+}
+
+.dark-mode .table {
+    color: white;
+}
+
+.dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #2a2a2a;
+}
+
+.dark-mode .form-control {
+    background-color: #2a2a2a;
+    color: white;
+    border: 1px solid #444;
+}
+
+.dark-mode .form-control::placeholder {
+    color: #bbb;
+}
+</style>
+
+</head>
+
+<body class="bg-light">
+
+<!-- TELA LOGIN -->
+<div id="telaLogin" class="container mt-5" style="max-width:400px;">
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white text-center d-flex justify-content-between align-items-center">
+            <span>Login do Sistema</span>
+            <button class="btn btn-secondary btn-sm" onclick="toggleDarkMode()">🌙</button>
+        </div>
+        <div class="card-body">
+            <input type="text" id="usuarioLogin" class="form-control mb-2" placeholder="Usuário">
+            <input type="password" id="senhaLogin" class="form-control mb-3" placeholder="Senha">
+            <button class="btn btn-success w-100 mb-2" onclick="login()">Entrar</button>
+            <button class="btn btn-outline-primary w-100" onclick="mostrarCadastro()">Criar Conta</button>
+        </div>
+    </div>
+</div>
+
+<!-- TELA CADASTRO -->
+<div id="telaCadastro" class="container mt-5" style="max-width:400px; display:none;">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white text-center">
+            Criar Usuário
+        </div>
+        <div class="card-body">
+            <input type="text" id="novoUsuario" class="form-control mb-2" placeholder="Novo Usuário">
+            <input type="password" id="novaSenha" class="form-control mb-3" placeholder="Nova Senha">
+            <button class="btn btn-success w-100 mb-2" onclick="criarUsuario()">Cadastrar</button>
+            <button class="btn btn-secondary w-100" onclick="voltarLogin()">Voltar</button>
+        </div>
+    </div>
+</div>
+
+<!-- SISTEMA -->
+<div id="sistema" style="display:none;">
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <span>Cadastro de Clientes</span>
+            <div>
+                <span id="usuarioLogado" class="me-3"></span>
+                <button class="btn btn-secondary btn-sm me-2" onclick="toggleDarkMode()">🌙</button>
+                <button class="btn btn-danger btn-sm" onclick="logout()">Sair</button>
+            </div>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-2">
+                <div class="col-md-5">
+                    <input type="text" id="nome" class="form-control" placeholder="Nome">
+                </div>
+                <div class="col-md-5">
+                    <input type="email" id="email" class="form-control" placeholder="Email">
+                </div>
+                <div class="col-md-2">
+                    <button onclick="adicionar()" class="btn btn-success w-100">Adicionar</button>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <input type="text" id="busca" class="form-control"
+                        placeholder="Buscar por nome ou email..."
+                        onkeyup="buscar()">
+                </div>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaClientes"></tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+// ===== DARK MODE =====
+function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+
+    if (document.body.classList.contains("dark-mode")) {
+        localStorage.setItem("darkMode", "true");
+    } else {
+        localStorage.removeItem("darkMode");
+    }
+}
+
+function verificarDarkMode() {
+    if (localStorage.getItem("darkMode") === "true") {
+        document.body.classList.add("dark-mode");
+    }
+}
+
+verificarDarkMode();
+
+// ===== BANCO LOCAL =====
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+let clientes = JSON.parse(localStorage.getItem("clientes")) || [];
+
+// ===== TELAS =====
+function mostrarCadastro() {
+    document.getElementById("telaLogin").style.display = "none";
+    document.getElementById("telaCadastro").style.display = "block";
+}
+
+function voltarLogin() {
+    document.getElementById("telaCadastro").style.display = "none";
+    document.getElementById("telaLogin").style.display = "block";
+}
+
+// ===== USUÁRIO =====
+function criarUsuario() {
+    let usuario = document.getElementById("novoUsuario").value;
+    let senha = document.getElementById("novaSenha").value;
+
+    if (!usuario || !senha) {
+        alert("Preencha todos os campos!");
+        return;
+    }
+
+    if (usuarios.find(u => u.usuario === usuario)) {
+        alert("Usuário já existe!");
+        return;
+    }
+
+    usuarios.push({ usuario, senha });
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+    alert("Usuário criado com sucesso!");
+    voltarLogin();
+}
+
+function login() {
+    let usuario = document.getElementById("usuarioLogin").value;
+    let senha = document.getElementById("senhaLogin").value;
+
+    let usuarioValido = usuarios.find(u => u.usuario === usuario && u.senha === senha);
+
+    if (usuarioValido) {
+        localStorage.setItem("logado", usuario);
+        mostrarSistema();
+    } else {
+        alert("Usuário ou senha inválidos!");
+    }
+}
+
+function logout() {
+    localStorage.removeItem("logado");
+    location.reload();
+}
+
+function verificarLogin() {
+    let logado = localStorage.getItem("logado");
+    if (logado) {
+        mostrarSistema();
+    }
+}
+
+function mostrarSistema() {
+    document.getElementById("telaLogin").style.display = "none";
+    document.getElementById("telaCadastro").style.display = "none";
+    document.getElementById("sistema").style.display = "block";
+
+    document.getElementById("usuarioLogado").innerText = "Usuário: " + localStorage.getItem("logado");
+}
+
+// ===== CRUD =====
+function salvarLocal() {
+    localStorage.setItem("clientes", JSON.stringify(clientes));
+}
+
+function adicionar() {
+    let nome = document.getElementById("nome").value;
+    let email = document.getElementById("email").value;
+
+    if (!nome || !email) {
+        alert("Preencha todos os campos!");
+        return;
+    }
+
+    let id = clientes.length > 0 ? clientes[clientes.length - 1].id + 1 : 1;
+    clientes.push({ id, nome, email });
+
+    salvarLocal();
+    atualizarTabela();
+
+    document.getElementById("nome").value = "";
+    document.getElementById("email").value = "";
+}
+
+function atualizarTabela(lista = clientes) {
+    let tabela = document.getElementById("tabelaClientes");
+    tabela.innerHTML = "";
+
+    lista.forEach(cliente => {
+        tabela.innerHTML += `
+            <tr>
+                <td>${cliente.id}</td>
+                <td>${cliente.nome}</td>
+                <td>${cliente.email}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="deletar(${cliente.id})">Excluir</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+function buscar() {
+    let termo = document.getElementById("busca").value.toLowerCase();
+
+    let filtrados = clientes.filter(cliente =>
+        cliente.nome.toLowerCase().includes(termo) ||
+        cliente.email.toLowerCase().includes(termo)
+    );
+
+    atualizarTabela(filtrados);
+}
+
+function deletar(id) {
+    clientes = clientes.filter(c => c.id !== id);
+    salvarLocal();
+    atualizarTabela();
+}
+
+verificarLogin();
+atualizarTabela();
+
+</script>
+
+</body>
+</html>
