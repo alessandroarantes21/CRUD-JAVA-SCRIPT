@@ -100,7 +100,9 @@ body {
                     <input type="email" id="email" class="form-control" placeholder="Email">
                 </div>
                 <div class="col-md-2">
-                    <button id="btnAdicionar" onclick="adicionar()" class="btn btn-success w-100">Adicionar</button>
+                    <button id="btnAdicionar" onclick="adicionar()" class="btn btn-success w-100">
+                        Adicionar
+                    </button>
                 </div>
             </div>
 
@@ -130,6 +132,8 @@ let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 let clientes = JSON.parse(localStorage.getItem("clientes")) || [];
 let editandoId = null;
 
+const btnAdicionar = document.getElementById("btnAdicionar");
+
 // DARK MODE
 function toggleDarkMode() {
     document.body.classList.toggle("dark-mode");
@@ -157,10 +161,10 @@ function verificarLogin() {
     if (localStorage.getItem("logado")) mostrarSistema();
 }
 
-// USUÁRIOS
+// USUÁRIO
 function criarUsuario() {
-    let usuario = novoUsuario.value.trim();
-    let senha = novaSenha.value.trim();
+    let usuario = document.getElementById("novoUsuario").value.trim();
+    let senha = document.getElementById("novaSenha").value.trim();
 
     if (!usuario || !senha) return alert("Preencha todos os campos!");
     if (usuarios.find(u => u.usuario === usuario)) return alert("Usuário já existe!");
@@ -172,8 +176,8 @@ function criarUsuario() {
 }
 
 function login() {
-    let usuario = usuarioLogin.value.trim();
-    let senha = senhaLogin.value.trim();
+    let usuario = document.getElementById("usuarioLogin").value.trim();
+    let senha = document.getElementById("senhaLogin").value.trim();
 
     let usuarioValido = usuarios.find(u => u.usuario === usuario && u.senha === senha);
 
@@ -201,54 +205,61 @@ function formatarData() {
 
 function adicionar() {
 
-    if (!nome.value.trim() || !email.value.trim()) 
+    let nomeInput = document.getElementById("nome");
+    let emailInput = document.getElementById("email");
+
+    if (!nomeInput.value.trim() || !emailInput.value.trim())
         return alert("Preencha todos os campos!");
 
     if (editandoId !== null) {
 
         let cliente = clientes.find(c => c.id === editandoId);
-        cliente.nome = nome.value;
-        cliente.email = email.value;
+        cliente.nome = nomeInput.value;
+        cliente.email = emailInput.value;
 
         editandoId = null;
         btnAdicionar.innerText = "Adicionar";
 
     } else {
 
-        let id = clientes.length > 0 ? clientes[clientes.length - 1].id + 1 : 1;
+        let id = clientes.length > 0
+            ? clientes[clientes.length - 1].id + 1
+            : 1;
 
         clientes.push({
             id,
-            nome: nome.value,
-            email: email.value,
+            nome: nomeInput.value,
+            email: emailInput.value,
             dataCriacao: formatarData()
         });
-
     }
 
     salvarLocal();
     atualizarTabela();
 
-    nome.value = "";
-    email.value = "";
+    nomeInput.value = "";
+    emailInput.value = "";
 }
 
 function atualizarTabela() {
 
-    tabelaClientes.innerHTML = "";
+    let tabela = document.getElementById("tabelaClientes");
+    tabela.innerHTML = "";
 
     clientes.forEach(cliente => {
-        tabelaClientes.innerHTML += `
+        tabela.innerHTML += `
             <tr>
                 <td>${cliente.id}</td>
                 <td>${cliente.nome}</td>
                 <td>${cliente.email}</td>
                 <td>${cliente.dataCriacao || "-"}</td>
                 <td>
-                    <button class="btn btn-warning btn-sm me-1" onclick="editar(${cliente.id})">
+                    <button class="btn btn-warning btn-sm me-1"
+                        onclick="editar(${cliente.id})">
                         Editar
                     </button>
-                    <button class="btn btn-danger btn-sm" onclick="deletar(${cliente.id})">
+                    <button class="btn btn-danger btn-sm"
+                        onclick="deletar(${cliente.id})">
                         Excluir
                     </button>
                 </td>
@@ -260,8 +271,8 @@ function atualizarTabela() {
 function editar(id) {
     let cliente = clientes.find(c => c.id === id);
 
-    nome.value = cliente.nome;
-    email.value = cliente.email;
+    document.getElementById("nome").value = cliente.nome;
+    document.getElementById("email").value = cliente.email;
 
     editandoId = id;
     btnAdicionar.innerText = "Atualizar";
