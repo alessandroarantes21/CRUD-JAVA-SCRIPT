@@ -48,81 +48,128 @@ body {
 
 <!-- LOGIN -->
 <div id="telaLogin" class="container mt-5" style="max-width:420px;">
-    <div class="card shadow-lg">
-        <div class="card-header bg-dark text-white d-flex justify-content-between">
-            <span>🔐 Login</span>
-            <button class="btn btn-secondary btn-sm" onclick="toggleDarkMode()">🌙</button>
-        </div>
-        <div class="card-body p-4">
-            <input type="text" id="usuarioLogin" class="form-control mb-3" placeholder="Usuário">
-            <input type="password" id="senhaLogin" class="form-control mb-3" placeholder="Senha">
-            <button class="btn btn-success w-100 mb-2" onclick="login()">Entrar</button>
-            <button class="btn btn-outline-light w-100" onclick="mostrarCadastro()">Criar Conta</button>
-        </div>
-    </div>
+<div class="card shadow-lg">
+<div class="card-header bg-dark text-white d-flex justify-content-between">
+<span>🔐 Login</span>
+<button class="btn btn-secondary btn-sm" onclick="toggleDarkMode()">🌙</button>
+</div>
+
+<div class="card-body p-4">
+<input type="text" id="usuarioLogin" class="form-control mb-3" placeholder="Usuário">
+<input type="password" id="senhaLogin" class="form-control mb-3" placeholder="Senha">
+
+<button class="btn btn-success w-100 mb-2" onclick="login()">Entrar</button>
+<button class="btn btn-outline-light w-100" onclick="mostrarCadastro()">Criar Conta</button>
+</div>
+</div>
 </div>
 
 <!-- CADASTRO -->
 <div id="telaCadastro" class="container mt-5" style="max-width:420px; display:none;">
-    <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white text-center">
-            👤 Criar Usuário
-        </div>
-        <div class="card-body p-4">
-            <input type="text" id="novoUsuario" class="form-control mb-3" placeholder="Novo Usuário">
-            <input type="password" id="novaSenha" class="form-control mb-3" placeholder="Nova Senha">
-            <button class="btn btn-success w-100 mb-2" onclick="criarUsuario()">Cadastrar</button>
-            <button class="btn btn-secondary w-100" onclick="voltarLogin()">Voltar</button>
-        </div>
-    </div>
+<div class="card shadow-lg">
+
+<div class="card-header bg-primary text-white text-center">
+👤 Criar Usuário
+</div>
+
+<div class="card-body p-4">
+
+<input type="text" id="novoUsuario" class="form-control mb-3" placeholder="Novo Usuário">
+<input type="password" id="novaSenha" class="form-control mb-3" placeholder="Nova Senha">
+
+<button class="btn btn-success w-100 mb-2" onclick="criarUsuario()">Cadastrar</button>
+<button class="btn btn-secondary w-100" onclick="voltarLogin()">Voltar</button>
+
+</div>
+</div>
 </div>
 
 <!-- SISTEMA -->
 <div id="sistema" style="display:none;">
+
 <div class="container mt-5">
-    <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white d-flex justify-content-between">
-            <span>📋 Cadastro de Clientes</span>
-            <div>
-                <span id="usuarioLogado" class="me-3"></span>
-                <button class="btn btn-secondary btn-sm me-2" onclick="toggleDarkMode()">🌙</button>
-                <button class="btn btn-danger btn-sm" onclick="logout()">Sair</button>
-            </div>
-        </div>
 
-        <div class="card-body p-4">
+<div class="card shadow-lg">
 
-            <div class="row g-3">
-                <div class="col-md-5">
-                    <input type="text" id="nome" class="form-control" placeholder="Nome">
-                </div>
-                <div class="col-md-5">
-                    <input type="email" id="email" class="form-control" placeholder="Email">
-                </div>
-                <div class="col-md-2">
-                    <button id="btnAdicionar" onclick="adicionar()" class="btn btn-success w-100">
-                        Adicionar
-                    </button>
-                </div>
-            </div>
+<div class="card-header bg-primary text-white d-flex justify-content-between">
 
-            <hr>
+<span>📋 Cadastro de Clientes</span>
 
-            <table class="table table-striped align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>Data Criação</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelaClientes"></tbody>
-            </table>
+<div>
+<span id="usuarioLogado" class="me-3"></span>
 
-        </div>
-    </div>
+<button class="btn btn-secondary btn-sm me-2" onclick="toggleDarkMode()">🌙</button>
+
+<button class="btn btn-danger btn-sm" onclick="logout()">Sair</button>
+</div>
+
+</div>
+
+<div class="card-body p-4">
+
+<div class="row g-3">
+
+<div class="col-md-4">
+<input type="text" id="nome" class="form-control" placeholder="Nome">
+</div>
+
+<div class="col-md-4">
+<input type="email" id="email" class="form-control" placeholder="Email">
+</div>
+
+<div class="col-md-2">
+<button id="btnAdicionar" onclick="adicionar()" class="btn btn-success w-100">
+Adicionar
+</button>
+</div>
+
+<div class="col-md-2">
+<input type="text" id="buscar" class="form-control" placeholder="🔎 Buscar" onkeyup="buscarCliente()">
+</div>
+
+</div>
+
+<hr>
+
+<div class="mb-3">
+
+<button class="btn btn-primary btn-sm me-2" onclick="exportarClientes()">
+📥 Exportar Clientes
+</button>
+
+<button class="btn btn-secondary btn-sm"
+onclick="document.getElementById('importarBackup').click()">
+📤 Importar Backup
+</button>
+
+<input type="file" id="importarBackup" style="display:none" onchange="importarClientes(event)">
+
+<span class="ms-3">
+Clientes cadastrados: <strong id="contadorClientes">0</strong>
+</span>
+
+</div>
+
+<table class="table table-striped align-middle">
+
+<thead class="table-dark">
+
+<tr>
+<th>ID</th>
+<th>Nome</th>
+<th>Email</th>
+<th>Data Criação</th>
+<th>Ações</th>
+</tr>
+
+</thead>
+
+<tbody id="tabelaClientes"></tbody>
+
+</table>
+
+</div>
+</div>
 </div>
 </div>
 
@@ -134,159 +181,277 @@ let editandoId = null;
 
 const btnAdicionar = document.getElementById("btnAdicionar");
 
-// DARK MODE
-function toggleDarkMode() {
-    document.body.classList.toggle("dark-mode");
+function toggleDarkMode(){
+document.body.classList.toggle("dark-mode");
 }
 
-// TELAS
-function mostrarCadastro() {
-    telaLogin.style.display = "none";
-    telaCadastro.style.display = "block";
+function mostrarCadastro(){
+telaLogin.style.display="none";
+telaCadastro.style.display="block";
 }
 
-function voltarLogin() {
-    telaCadastro.style.display = "none";
-    telaLogin.style.display = "block";
+function voltarLogin(){
+telaCadastro.style.display="none";
+telaLogin.style.display="block";
 }
 
-function mostrarSistema() {
-    telaLogin.style.display = "none";
-    telaCadastro.style.display = "none";
-    sistema.style.display = "block";
-    usuarioLogado.innerText = "👤 " + localStorage.getItem("logado");
+function mostrarSistema(){
+telaLogin.style.display="none";
+telaCadastro.style.display="none";
+sistema.style.display="block";
+
+usuarioLogado.innerText="👤 "+localStorage.getItem("logado");
 }
 
-function verificarLogin() {
-    if (localStorage.getItem("logado")) mostrarSistema();
+function verificarLogin(){
+if(localStorage.getItem("logado")) mostrarSistema();
 }
 
-// USUÁRIO
-function criarUsuario() {
-    let usuario = document.getElementById("novoUsuario").value.trim();
-    let senha = document.getElementById("novaSenha").value.trim();
+function criarUsuario(){
 
-    if (!usuario || !senha) return alert("Preencha todos os campos!");
-    if (usuarios.find(u => u.usuario === usuario)) return alert("Usuário já existe!");
+let usuario=document.getElementById("novoUsuario").value.trim();
+let senha=document.getElementById("novaSenha").value.trim();
 
-    usuarios.push({ usuario, senha });
-    localStorage.setItem("usuarios", JSON.stringify(usuarios));
-    alert("Usuário criado com sucesso!");
-    voltarLogin();
+if(!usuario||!senha) return alert("Preencha todos os campos!");
+
+if(usuarios.find(u=>u.usuario===usuario))
+return alert("Usuário já existe!");
+
+usuarios.push({usuario,senha});
+
+localStorage.setItem("usuarios",JSON.stringify(usuarios));
+
+alert("Usuário criado com sucesso!");
+
+voltarLogin();
+
 }
 
-function login() {
-    let usuario = document.getElementById("usuarioLogin").value.trim();
-    let senha = document.getElementById("senhaLogin").value.trim();
+function login(){
 
-    let usuarioValido = usuarios.find(u => u.usuario === usuario && u.senha === senha);
+let usuario=document.getElementById("usuarioLogin").value.trim();
+let senha=document.getElementById("senhaLogin").value.trim();
 
-    if (usuarioValido) {
-        localStorage.setItem("logado", usuario);
-        mostrarSistema();
-    } else {
-        alert("Usuário ou senha inválidos!");
-    }
+let usuarioValido=usuarios.find(
+u=>u.usuario===usuario && u.senha===senha
+);
+
+if(usuarioValido){
+
+localStorage.setItem("logado",usuario);
+
+mostrarSistema();
+
+}else{
+
+alert("Usuário ou senha inválidos!");
+
 }
 
-function logout() {
-    localStorage.removeItem("logado");
-    location.reload();
 }
 
-// CLIENTES
-function salvarLocal() {
-    localStorage.setItem("clientes", JSON.stringify(clientes));
+function logout(){
+localStorage.removeItem("logado");
+location.reload();
 }
 
-function formatarData() {
-    return new Date().toLocaleString("pt-BR");
+function salvarLocal(){
+
+localStorage.setItem("clientes",JSON.stringify(clientes));
+
 }
 
-function adicionar() {
+function formatarData(){
 
-    let nomeInput = document.getElementById("nome");
-    let emailInput = document.getElementById("email");
+return new Date().toLocaleString("pt-BR");
 
-    if (!nomeInput.value.trim() || !emailInput.value.trim())
-        return alert("Preencha todos os campos!");
-
-    if (editandoId !== null) {
-
-        let cliente = clientes.find(c => c.id === editandoId);
-        cliente.nome = nomeInput.value;
-        cliente.email = emailInput.value;
-
-        editandoId = null;
-        btnAdicionar.innerText = "Adicionar";
-
-    } else {
-
-        let id = clientes.length > 0
-            ? clientes[clientes.length - 1].id + 1
-            : 1;
-
-        clientes.push({
-            id,
-            nome: nomeInput.value,
-            email: emailInput.value,
-            dataCriacao: formatarData()
-        });
-    }
-
-    salvarLocal();
-    atualizarTabela();
-
-    nomeInput.value = "";
-    emailInput.value = "";
 }
 
-function atualizarTabela() {
+function adicionar(){
 
-    let tabela = document.getElementById("tabelaClientes");
-    tabela.innerHTML = "";
+let nomeInput=document.getElementById("nome");
+let emailInput=document.getElementById("email");
 
-    clientes.forEach(cliente => {
-        tabela.innerHTML += `
-            <tr>
-                <td>${cliente.id}</td>
-                <td>${cliente.nome}</td>
-                <td>${cliente.email}</td>
-                <td>${cliente.dataCriacao || "-"}</td>
-                <td>
-                    <button class="btn btn-warning btn-sm me-1"
-                        onclick="editar(${cliente.id})">
-                        Editar
-                    </button>
-                    <button class="btn btn-danger btn-sm"
-                        onclick="deletar(${cliente.id})">
-                        Excluir
-                    </button>
-                </td>
-            </tr>
-        `;
-    });
+if(!nomeInput.value.trim()||!emailInput.value.trim())
+return alert("Preencha todos os campos!");
+
+if(editandoId!==null){
+
+let cliente=clientes.find(c=>c.id===editandoId);
+
+cliente.nome=nomeInput.value;
+cliente.email=emailInput.value;
+
+editandoId=null;
+
+btnAdicionar.innerText="Adicionar";
+
+}else{
+
+let id=clientes.length>0
+?clientes[clientes.length-1].id+1
+:1;
+
+clientes.push({
+
+id,
+nome:nomeInput.value,
+email:emailInput.value,
+dataCriacao:formatarData()
+
+});
+
 }
 
-function editar(id) {
-    let cliente = clientes.find(c => c.id === id);
+salvarLocal();
 
-    document.getElementById("nome").value = cliente.nome;
-    document.getElementById("email").value = cliente.email;
+atualizarTabela();
 
-    editandoId = id;
-    btnAdicionar.innerText = "Atualizar";
+nomeInput.value="";
+emailInput.value="";
+
 }
 
-function deletar(id) {
-    if (!confirm("Deseja realmente excluir?")) return;
+function atualizarTabela(){
 
-    clientes = clientes.filter(c => c.id !== id);
-    salvarLocal();
-    atualizarTabela();
+let tabela=document.getElementById("tabelaClientes");
+
+tabela.innerHTML="";
+
+let busca=document.getElementById("buscar").value.toLowerCase();
+
+let filtrados=clientes.filter(c=>
+
+c.nome.toLowerCase().includes(busca) ||
+
+c.email.toLowerCase().includes(busca)
+
+);
+
+document.getElementById("contadorClientes").innerText=clientes.length;
+
+filtrados.forEach(cliente=>{
+
+tabela.innerHTML+=`
+
+<tr>
+
+<td>${cliente.id}</td>
+
+<td>${cliente.nome}</td>
+
+<td>${cliente.email}</td>
+
+<td>${cliente.dataCriacao||"-"}</td>
+
+<td>
+
+<button class="btn btn-warning btn-sm me-1"
+onclick="editar(${cliente.id})">
+
+Editar
+
+</button>
+
+<button class="btn btn-danger btn-sm"
+onclick="deletar(${cliente.id})">
+
+Excluir
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+function buscarCliente(){
+
+atualizarTabela();
+
+}
+
+function editar(id){
+
+let cliente=clientes.find(c=>c.id===id);
+
+document.getElementById("nome").value=cliente.nome;
+
+document.getElementById("email").value=cliente.email;
+
+editandoId=id;
+
+btnAdicionar.innerText="Atualizar";
+
+}
+
+function deletar(id){
+
+if(!confirm("Deseja realmente excluir?")) return;
+
+clientes=clientes.filter(c=>c.id!==id);
+
+salvarLocal();
+
+atualizarTabela();
+
+}
+
+function exportarClientes(){
+
+let dados=JSON.stringify(clientes,null,2);
+
+let blob=new Blob([dados],{type:"application/json"});
+
+let link=document.createElement("a");
+
+link.href=URL.createObjectURL(blob);
+
+link.download="backup_clientes.json";
+
+link.click();
+
+}
+
+function importarClientes(event){
+
+let arquivo=event.target.files[0];
+
+if(!arquivo) return;
+
+let leitor=new FileReader();
+
+leitor.onload=function(e){
+
+try{
+
+clientes=JSON.parse(e.target.result);
+
+salvarLocal();
+
+atualizarTabela();
+
+alert("Backup importado com sucesso!");
+
+}catch{
+
+alert("Arquivo inválido!");
+
+}
+
+};
+
+leitor.readAsText(arquivo);
+
 }
 
 verificarLogin();
+
 atualizarTabela();
 
 </script>
