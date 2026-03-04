@@ -39,8 +39,63 @@ border-radius:10px;
 
 </head>
 
-
 <body>
+
+<!-- LOGIN -->
+
+<div id="telaLogin" class="container mt-5" style="max-width:400px">
+
+<div class="card shadow">
+
+<div class="card-header bg-dark text-white">
+🔐 Login do Sistema
+</div>
+
+<div class="card-body">
+
+<input id="usuarioLogin" class="form-control mb-2" placeholder="Usuário">
+
+<input type="password" id="senhaLogin" class="form-control mb-3" placeholder="Senha">
+
+<button class="btn btn-success w-100 mb-2" onclick="login()">Entrar</button>
+
+<button class="btn btn-secondary w-100" onclick="mostrarCadastro()">Criar Conta</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- CADASTRO -->
+
+<div id="telaCadastro" class="container mt-5" style="max-width:400px; display:none">
+
+<div class="card shadow">
+
+<div class="card-header bg-primary text-white">
+Criar Usuário
+</div>
+
+<div class="card-body">
+
+<input id="novoUsuario" class="form-control mb-2" placeholder="Usuário">
+
+<input type="password" id="novaSenha" class="form-control mb-3" placeholder="Senha">
+
+<button class="btn btn-success w-100 mb-2" onclick="criarUsuario()">Cadastrar</button>
+
+<button class="btn btn-secondary w-100" onclick="voltarLogin()">Voltar</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- SISTEMA -->
+
+<div id="sistema" style="display:none">
 
 <div class="container mt-5">
 
@@ -56,7 +111,9 @@ border-radius:10px;
 
 <button class="btn btn-light btn-sm me-2" onclick="mostrarPecas()">Peças</button>
 
-<button class="btn btn-dark btn-sm" onclick="toggleDarkMode()">🌙</button>
+<button class="btn btn-dark btn-sm me-2" onclick="toggleDarkMode()">🌙</button>
+
+<button class="btn btn-danger btn-sm" onclick="logout()">Sair</button>
 
 </div>
 
@@ -65,13 +122,11 @@ border-radius:10px;
 
 <div class="card-body">
 
-
 <!-- CLIENTES -->
 
 <div id="telaClientes">
 
 <h4>👥 Cadastro de Clientes</h4>
-
 
 <div class="row g-2 mb-3">
 
@@ -93,9 +148,7 @@ border-radius:10px;
 
 </div>
 
-
 <input id="buscarCliente" class="form-control mb-3" placeholder="🔎 Buscar cliente" onkeyup="atualizarTabelaClientes()">
-
 
 <table class="table table-striped">
 
@@ -117,13 +170,11 @@ border-radius:10px;
 
 </div>
 
-
 <!-- PEÇAS -->
 
 <div id="telaPecas" style="display:none">
 
 <h4>🔧 Cadastro de Peças</h4>
-
 
 <div class="row g-2 mb-3">
 
@@ -149,9 +200,7 @@ border-radius:10px;
 
 </div>
 
-
 <input id="buscarPeca" class="form-control mb-3" placeholder="🔎 Buscar peça" onkeyup="atualizarTabelaPecas()">
-
 
 <table class="table table-striped">
 
@@ -174,134 +223,144 @@ border-radius:10px;
 
 </div>
 
-
 </div>
 </div>
 </div>
 
+</div>
 
 <script>
 
-
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
 let clientes = JSON.parse(localStorage.getItem("clientes")) || []
 let pecas = JSON.parse(localStorage.getItem("pecas")) || []
 
+function mostrarCadastro(){
+telaLogin.style.display="none"
+telaCadastro.style.display="block"
+}
+
+function voltarLogin(){
+telaCadastro.style.display="none"
+telaLogin.style.display="block"
+}
+
+function criarUsuario(){
+
+let usuario = novoUsuario.value.trim()
+let senha = novaSenha.value.trim()
+
+if(!usuario || !senha){
+alert("Preencha usuário e senha")
+return
+}
+
+if(usuarios.find(u=>u.usuario===usuario)){
+alert("Usuário já existe")
+return
+}
+
+usuarios.push({usuario,senha})
+
+localStorage.setItem("usuarios",JSON.stringify(usuarios))
+
+alert("Usuário criado com sucesso")
+
+novoUsuario.value=""
+novaSenha.value=""
+
+voltarLogin()
+
+}
+
+function login(){
+
+let usuario = usuarioLogin.value.trim()
+let senha = senhaLogin.value.trim()
+
+let valido = usuarios.find(u=>u.usuario===usuario && u.senha===senha)
+
+if(valido){
+
+telaLogin.style.display="none"
+sistema.style.display="block"
+
+mostrarClientes()
+
+}else{
+
+alert("Usuário ou senha incorretos")
+
+}
+
+}
+
+function logout(){
+location.reload()
+}
 
 function toggleDarkMode(){
-
 document.body.classList.toggle("dark-mode")
-
 }
-
 
 function mostrarClientes(){
-
-document.getElementById("telaClientes").style.display="block"
-
-document.getElementById("telaPecas").style.display="none"
-
+telaClientes.style.display="block"
+telaPecas.style.display="none"
 }
-
 
 function mostrarPecas(){
-
-document.getElementById("telaClientes").style.display="none"
-
-document.getElementById("telaPecas").style.display="block"
-
+telaClientes.style.display="none"
+telaPecas.style.display="block"
 }
-
 
 function salvar(){
-
 localStorage.setItem("clientes",JSON.stringify(clientes))
-
 localStorage.setItem("pecas",JSON.stringify(pecas))
-
 }
-
-
 
 function adicionarCliente(){
 
-let nome=document.getElementById("nomeCliente").value
-
-let email=document.getElementById("emailCliente").value
-
-let telefone=document.getElementById("telefoneCliente").value
-
+let nome = nomeCliente.value
+let email = emailCliente.value
+let telefone = telefoneCliente.value
 
 if(!nome || !email) return alert("Preencha os campos")
 
-
 let id = clientes.length ? clientes[clientes.length-1].id+1 : 1
 
-
-clientes.push({
-
-id,
-nome,
-email,
-telefone
-
-})
-
+clientes.push({id,nome,email,telefone})
 
 salvar()
 
-
-document.getElementById("nomeCliente").value=""
-document.getElementById("emailCliente").value=""
-document.getElementById("telefoneCliente").value=""
+nomeCliente.value=""
+emailCliente.value=""
+telefoneCliente.value=""
 
 atualizarTabelaClientes()
 
 }
 
-
-
 function atualizarTabelaClientes(){
 
-let busca=document.getElementById("buscarCliente").value.toLowerCase()
+let busca = buscarCliente.value.toLowerCase()
 
-let tabela=document.getElementById("tabelaClientes")
+tabelaClientes.innerHTML=""
 
-tabela.innerHTML=""
+clientes.filter(c=>c.nome.toLowerCase().includes(busca)).forEach(c=>{
 
-
-clientes
-.filter(c=>c.nome.toLowerCase().includes(busca))
-.forEach(c=>{
-
-tabela.innerHTML+=`
-
+tabelaClientes.innerHTML+=`
 <tr>
-
 <td>${c.id}</td>
 <td>${c.nome}</td>
 <td>${c.email}</td>
 <td>${c.telefone}</td>
-
-<td>
-
-<button class="btn btn-danger btn-sm"
-onclick="excluirCliente(${c.id})">
-
-Excluir
-
-</button>
-
-</td>
-
+<td><button class="btn btn-danger btn-sm" onclick="excluirCliente(${c.id})">Excluir</button></td>
 </tr>
-
 `
 
 })
 
 }
-
-
 
 function excluirCliente(id){
 
@@ -310,95 +369,56 @@ if(!confirm("Excluir cliente?")) return
 clientes = clientes.filter(c=>c.id!==id)
 
 salvar()
-
 atualizarTabelaClientes()
 
 }
 
-
-
 function adicionarPeca(){
 
-let nome=document.getElementById("nomePeca").value
-let marca=document.getElementById("marcaPeca").value
-let modelo=document.getElementById("modeloPeca").value
-let serie=document.getElementById("seriePeca").value
-
+let nome = nomePeca.value
+let marca = marcaPeca.value
+let modelo = modeloPeca.value
+let serie = seriePeca.value
 
 if(!nome) return alert("Preencha o nome da peça")
 
-
 let id = pecas.length ? pecas[pecas.length-1].id+1 : 1
 
-
-pecas.push({
-
-id,
-nome,
-marca,
-modelo,
-serie
-
-})
-
+pecas.push({id,nome,marca,modelo,serie})
 
 salvar()
 
-
-document.getElementById("nomePeca").value=""
-document.getElementById("marcaPeca").value=""
-document.getElementById("modeloPeca").value=""
-document.getElementById("seriePeca").value=""
+nomePeca.value=""
+marcaPeca.value=""
+modeloPeca.value=""
+seriePeca.value=""
 
 atualizarTabelaPecas()
 
 }
 
-
-
 function atualizarTabelaPecas(){
 
-let busca=document.getElementById("buscarPeca").value.toLowerCase()
+let busca = buscarPeca.value.toLowerCase()
 
-let tabela=document.getElementById("tabelaPecas")
+tabelaPecas.innerHTML=""
 
-tabela.innerHTML=""
+pecas.filter(p=>p.nome.toLowerCase().includes(busca)).forEach(p=>{
 
-
-pecas
-.filter(p=>p.nome.toLowerCase().includes(busca))
-.forEach(p=>{
-
-tabela.innerHTML+=`
-
+tabelaPecas.innerHTML+=`
 <tr>
-
 <td>${p.id}</td>
 <td>${p.nome}</td>
 <td>${p.marca}</td>
 <td>${p.modelo}</td>
 <td>${p.serie}</td>
-
-<td>
-
-<button class="btn btn-danger btn-sm"
-onclick="excluirPeca(${p.id})">
-
-Excluir
-
-</button>
-
-</td>
-
+<td><button class="btn btn-danger btn-sm" onclick="excluirPeca(${p.id})">Excluir</button></td>
 </tr>
-
 `
 
 })
 
 }
-
-
 
 function excluirPeca(id){
 
@@ -407,21 +427,14 @@ if(!confirm("Excluir peça?")) return
 pecas = pecas.filter(p=>p.id!==id)
 
 salvar()
-
 atualizarTabelaPecas()
 
 }
 
-
-
 atualizarTabelaClientes()
 atualizarTabelaPecas()
-
 
 </script>
 
 </body>
 </html>
-```
-
-
