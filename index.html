@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -290,6 +291,160 @@ let nome=nomePeca.value
 let marca=marcaPeca.value
 let modelo=modeloPeca.value
 let serie=seriePeca.value
-let esto
-```
+let estoque=estoquePeca.value
+let preco=precoPeca.value
 
+if(!nome) return alert("Preencha o nome da peça")
+
+let id=pecas.length?pecas[pecas.length-1].id+1:1
+
+pecas.push({id,nome,marca,modelo,serie,estoque,preco})
+
+salvar()
+
+nomePeca.value=""
+marcaPeca.value=""
+modeloPeca.value=""
+seriePeca.value=""
+estoquePeca.value=""
+precoPeca.value=""
+
+atualizarTabelaPecas()
+
+}
+
+
+
+function atualizarTabelaPecas(){
+
+let busca=buscarPeca.value.toLowerCase()
+
+tabelaPecas.innerHTML=""
+
+pecas
+.filter(p=>p.nome.toLowerCase().includes(busca))
+.forEach(p=>{
+
+tabelaPecas.innerHTML+=`
+<tr>
+<td>${p.id}</td>
+<td>${p.nome}</td>
+<td>${p.marca}</td>
+<td>${p.modelo}</td>
+<td>${p.serie}</td>
+<td>${p.estoque}</td>
+<td>R$ ${p.preco}</td>
+<td>
+<button class="btn btn-danger btn-sm" onclick="excluirPeca(${p.id})">Excluir</button>
+</td>
+</tr>
+`
+
+})
+
+}
+
+
+
+function excluirPeca(id){
+
+if(!confirm("Excluir peça?")) return
+
+pecas=pecas.filter(p=>p.id!==id)
+
+salvar()
+
+atualizarTabelaPecas()
+
+}
+
+
+
+function exportarClientes(){
+
+let dados=JSON.stringify(clientes,null,2)
+
+let blob=new Blob([dados],{type:"application/json"})
+
+let link=document.createElement("a")
+
+link.href=URL.createObjectURL(blob)
+
+link.download="clientes_backup.json"
+
+link.click()
+
+}
+
+
+
+function importarClientesFunc(event){
+
+let arquivo=event.target.files[0]
+
+let leitor=new FileReader()
+
+leitor.onload=function(e){
+
+clientes=JSON.parse(e.target.result)
+
+salvar()
+
+atualizarTabelaClientes()
+
+}
+
+leitor.readAsText(arquivo)
+
+}
+
+
+
+function exportarPecas(){
+
+let dados=JSON.stringify(pecas,null,2)
+
+let blob=new Blob([dados],{type:"application/json"})
+
+let link=document.createElement("a")
+
+link.href=URL.createObjectURL(blob)
+
+link.download="pecas_backup.json"
+
+link.click()
+
+}
+
+
+
+function importarPecasFunc(event){
+
+let arquivo=event.target.files[0]
+
+let leitor=new FileReader()
+
+leitor.onload=function(e){
+
+pecas=JSON.parse(e.target.result)
+
+salvar()
+
+atualizarTabelaPecas()
+
+}
+
+leitor.readAsText(arquivo)
+
+}
+
+
+
+atualizarTabelaClientes()
+atualizarTabelaPecas()
+
+</script>
+
+</body>
+</html>
+```
