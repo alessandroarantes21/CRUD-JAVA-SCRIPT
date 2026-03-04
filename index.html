@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -38,6 +39,408 @@ color:white;
 
 <div id="telaLogin" class="container mt-5" style="max-width:400px">
 
-<div class="car
-```
+<div class="card shadow">
 
+<div class="card-header bg-dark text-white">
+Login do Sistema
+</div>
+
+<div class="card-body">
+
+<input id="usuarioLogin" class="form-control mb-2" placeholder="Usuário">
+
+<input type="password" id="senhaLogin" class="form-control mb-3" placeholder="Senha">
+
+<button class="btn btn-success w-100 mb-2" onclick="login()">Entrar</button>
+
+<button class="btn btn-secondary w-100" onclick="mostrarCadastro()">Criar Conta</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- CADASTRO -->
+
+<div id="telaCadastro" class="container mt-5" style="max-width:400px; display:none">
+
+<div class="card shadow">
+
+<div class="card-header bg-primary text-white">
+Criar Usuário
+</div>
+
+<div class="card-body">
+
+<input id="novoUsuario" class="form-control mb-2" placeholder="Usuário">
+
+<input type="password" id="novaSenha" class="form-control mb-3" placeholder="Senha">
+
+<button class="btn btn-success w-100 mb-2" onclick="criarUsuario()">Cadastrar</button>
+
+<button class="btn btn-secondary w-100" onclick="voltarLogin()">Voltar</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- SISTEMA -->
+
+<div id="sistema" style="display:none">
+
+<div class="container mt-5">
+
+<div class="card shadow-lg">
+
+<div class="card-header bg-primary text-white d-flex justify-content-between">
+
+<span>🔧 Sistema Oficina</span>
+
+<div>
+
+<button class="btn btn-light btn-sm me-2" onclick="mostrarClientes()">Clientes</button>
+
+<button class="btn btn-light btn-sm me-2" onclick="mostrarPecas()">Peças</button>
+
+<button class="btn btn-dark btn-sm me-2" onclick="toggleDarkMode()">🌙</button>
+
+<button class="btn btn-danger btn-sm" onclick="logout()">Sair</button>
+
+</div>
+
+</div>
+
+<div class="card-body">
+
+
+<!-- CLIENTES -->
+
+<div id="telaClientes">
+
+<h4>Clientes</h4>
+
+<div class="row g-2 mb-3">
+
+<div class="col-md-3">
+<input id="nomeCliente" class="form-control" placeholder="Nome">
+</div>
+
+<div class="col-md-3">
+<input id="emailCliente" class="form-control" placeholder="Email">
+</div>
+
+<div class="col-md-3">
+<input id="telefoneCliente" class="form-control" placeholder="Telefone">
+</div>
+
+<div class="col-md-3">
+<button class="btn btn-success w-100" onclick="adicionarCliente()">Adicionar</button>
+</div>
+
+</div>
+
+<input id="buscarCliente" class="form-control mb-3" placeholder="Buscar cliente" onkeyup="atualizarTabelaClientes()">
+
+<table class="table table-striped">
+
+<thead class="table-dark">
+
+<tr>
+<th>ID</th>
+<th>Nome</th>
+<th>Email</th>
+<th>Telefone</th>
+<th>Ações</th>
+</tr>
+
+</thead>
+
+<tbody id="tabelaClientes"></tbody>
+
+</table>
+
+</div>
+
+
+<!-- PECAS -->
+
+<div id="telaPecas" style="display:none">
+
+<h4>Peças</h4>
+
+<div class="row g-2 mb-3">
+
+<div class="col-md-3">
+<input id="nomePeca" class="form-control" placeholder="Nome da peça">
+</div>
+
+<div class="col-md-3">
+<input id="marcaPeca" class="form-control" placeholder="Marca">
+</div>
+
+<div class="col-md-3">
+<input id="modeloPeca" class="form-control" placeholder="Modelo">
+</div>
+
+<div class="col-md-2">
+<input id="seriePeca" class="form-control" placeholder="Série">
+</div>
+
+<div class="col-md-1">
+<button class="btn btn-success w-100" onclick="adicionarPeca()">+</button>
+</div>
+
+</div>
+
+<input id="buscarPeca" class="form-control mb-3" placeholder="Buscar peça" onkeyup="atualizarTabelaPecas()">
+
+<table class="table table-striped">
+
+<thead class="table-dark">
+
+<tr>
+<th>ID</th>
+<th>Nome</th>
+<th>Marca</th>
+<th>Modelo</th>
+<th>Série</th>
+<th>Ações</th>
+</tr>
+
+</thead>
+
+<tbody id="tabelaPecas"></tbody>
+
+</table>
+
+</div>
+
+
+</div>
+</div>
+</div>
+
+</div>
+
+
+<script>
+
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
+let clientes = JSON.parse(localStorage.getItem("clientes")) || []
+let pecas = JSON.parse(localStorage.getItem("pecas")) || []
+
+
+function mostrarCadastro(){
+document.getElementById("telaLogin").style.display="none"
+document.getElementById("telaCadastro").style.display="block"
+}
+
+function voltarLogin(){
+document.getElementById("telaCadastro").style.display="none"
+document.getElementById("telaLogin").style.display="block"
+}
+
+
+function criarUsuario(){
+
+let usuario=document.getElementById("novoUsuario").value.trim()
+let senha=document.getElementById("novaSenha").value.trim()
+
+if(!usuario || !senha){
+alert("Preencha usuário e senha")
+return
+}
+
+if(usuarios.find(u=>u.usuario===usuario)){
+alert("Usuário já existe")
+return
+}
+
+usuarios.push({usuario,senha})
+
+localStorage.setItem("usuarios",JSON.stringify(usuarios))
+
+alert("Usuário criado")
+
+voltarLogin()
+
+}
+
+
+function login(){
+
+let usuario=document.getElementById("usuarioLogin").value.trim()
+let senha=document.getElementById("senhaLogin").value.trim()
+
+let valido=usuarios.find(u=>u.usuario===usuario && u.senha===senha)
+
+if(valido){
+
+document.getElementById("telaLogin").style.display="none"
+document.getElementById("sistema").style.display="block"
+
+mostrarClientes()
+
+}else{
+
+alert("Usuário ou senha incorretos")
+
+}
+
+}
+
+
+function logout(){
+location.reload()
+}
+
+
+function toggleDarkMode(){
+document.body.classList.toggle("dark-mode")
+}
+
+
+function mostrarClientes(){
+document.getElementById("telaClientes").style.display="block"
+document.getElementById("telaPecas").style.display="none"
+}
+
+
+function mostrarPecas(){
+document.getElementById("telaClientes").style.display="none"
+document.getElementById("telaPecas").style.display="block"
+}
+
+
+function salvar(){
+localStorage.setItem("clientes",JSON.stringify(clientes))
+localStorage.setItem("pecas",JSON.stringify(pecas))
+}
+
+
+function adicionarCliente(){
+
+let nome=document.getElementById("nomeCliente").value
+let email=document.getElementById("emailCliente").value
+let telefone=document.getElementById("telefoneCliente").value
+
+if(!nome || !email) return alert("Preencha os campos")
+
+let id=clientes.length?clientes[clientes.length-1].id+1:1
+
+clientes.push({id,nome,email,telefone})
+
+salvar()
+
+document.getElementById("nomeCliente").value=""
+document.getElementById("emailCliente").value=""
+document.getElementById("telefoneCliente").value=""
+
+atualizarTabelaClientes()
+
+}
+
+
+function atualizarTabelaClientes(){
+
+let busca=document.getElementById("buscarCliente").value.toLowerCase()
+
+let tabela=document.getElementById("tabelaClientes")
+
+tabela.innerHTML=""
+
+clientes.filter(c=>c.nome.toLowerCase().includes(busca)).forEach(c=>{
+
+tabela.innerHTML+=`
+<tr>
+<td>${c.id}</td>
+<td>${c.nome}</td>
+<td>${c.email}</td>
+<td>${c.telefone}</td>
+<td><button class="btn btn-danger btn-sm" onclick="excluirCliente(${c.id})">Excluir</button></td>
+</tr>
+`
+
+})
+
+}
+
+
+function excluirCliente(id){
+clientes=clientes.filter(c=>c.id!==id)
+salvar()
+atualizarTabelaClientes()
+}
+
+
+function adicionarPeca(){
+
+let nome=document.getElementById("nomePeca").value
+let marca=document.getElementById("marcaPeca").value
+let modelo=document.getElementById("modeloPeca").value
+let serie=document.getElementById("seriePeca").value
+
+if(!nome) return alert("Digite a peça")
+
+let id=pecas.length?pecas[pecas.length-1].id+1:1
+
+pecas.push({id,nome,marca,modelo,serie})
+
+salvar()
+
+document.getElementById("nomePeca").value=""
+document.getElementById("marcaPeca").value=""
+document.getElementById("modeloPeca").value=""
+document.getElementById("seriePeca").value=""
+
+atualizarTabelaPecas()
+
+}
+
+
+function atualizarTabelaPecas(){
+
+let busca=document.getElementById("buscarPeca").value.toLowerCase()
+
+let tabela=document.getElementById("tabelaPecas")
+
+tabela.innerHTML=""
+
+pecas.filter(p=>p.nome.toLowerCase().includes(busca)).forEach(p=>{
+
+tabela.innerHTML+=`
+<tr>
+<td>${p.id}</td>
+<td>${p.nome}</td>
+<td>${p.marca}</td>
+<td>${p.modelo}</td>
+<td>${p.serie}</td>
+<td><button class="btn btn-danger btn-sm" onclick="excluirPeca(${p.id})">Excluir</button></td>
+</tr>
+`
+
+})
+
+}
+
+
+function excluirPeca(id){
+pecas=pecas.filter(p=>p.id!==id)
+salvar()
+atualizarTabelaPecas()
+}
+
+
+atualizarTabelaClientes()
+atualizarTabelaPecas()
+
+</script>
+
+</body>
+</html>
+```
