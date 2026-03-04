@@ -1,91 +1,36 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Sistema de Clientes</title>
+<title>Sistema Oficina V2</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-body {
-    font-family: 'Poppins', sans-serif;
-    transition: all 0.3s ease;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+body{
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#667eea,#764ba2);
 }
 
-.card {
-    border: none;
-    border-radius: 18px;
+.card{border-radius:16px}
+
+.dark-mode{
+background:#121212!important;
+color:white!important;
 }
 
-.btn {
-    border-radius: 12px;
-    transition: 0.3s ease;
+.dark-mode .card{
+background:#1e1e1e;
+color:white;
 }
 
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-}
-
-.table { border-radius: 12px; overflow: hidden; }
-.form-control { border-radius: 10px; }
-
-.dark-mode {
-    background: linear-gradient(135deg, #1e1e2f, #121212) !important;
-    color: white !important;
-}
-
-.dark-mode .card {
-    background-color: rgba(30,30,30,0.95);
-    color: white;
-}
+.btn{border-radius:10px}
 </style>
 </head>
 
 <body>
-
-<!-- LOGIN -->
-<div id="telaLogin" class="container mt-5" style="max-width:420px;">
-<div class="card shadow-lg">
-<div class="card-header bg-dark text-white d-flex justify-content-between">
-<span>🔐 Login</span>
-<button class="btn btn-secondary btn-sm" onclick="toggleDarkMode()">🌙</button>
-</div>
-
-<div class="card-body p-4">
-<input type="text" id="usuarioLogin" class="form-control mb-3" placeholder="Usuário">
-<input type="password" id="senhaLogin" class="form-control mb-3" placeholder="Senha">
-
-<button class="btn btn-success w-100 mb-2" onclick="login()">Entrar</button>
-<button class="btn btn-outline-light w-100" onclick="mostrarCadastro()">Criar Conta</button>
-</div>
-</div>
-</div>
-
-<!-- CADASTRO -->
-<div id="telaCadastro" class="container mt-5" style="max-width:420px; display:none;">
-<div class="card shadow-lg">
-
-<div class="card-header bg-primary text-white text-center">
-👤 Criar Usuário
-</div>
-
-<div class="card-body p-4">
-
-<input type="text" id="novoUsuario" class="form-control mb-3" placeholder="Novo Usuário">
-<input type="password" id="novaSenha" class="form-control mb-3" placeholder="Nova Senha">
-
-<button class="btn btn-success w-100 mb-2" onclick="criarUsuario()">Cadastrar</button>
-<button class="btn btn-secondary w-100" onclick="voltarLogin()">Voltar</button>
-
-</div>
-</div>
-</div>
-
-<!-- SISTEMA -->
-<div id="sistema" style="display:none;">
 
 <div class="container mt-5">
 
@@ -93,75 +38,56 @@ body {
 
 <div class="card-header bg-primary text-white d-flex justify-content-between">
 
-<span>📋 Cadastro de Clientes</span>
+<span>🔧 Sistema Oficina</span>
 
 <div>
-<span id="usuarioLogado" class="me-3"></span>
-
-<button class="btn btn-secondary btn-sm me-2" onclick="toggleDarkMode()">🌙</button>
-
-<button class="btn btn-danger btn-sm" onclick="logout()">Sair</button>
+<button class="btn btn-light btn-sm me-2" onclick="mostrarClientes()">Clientes</button>
+<button class="btn btn-light btn-sm me-2" onclick="mostrarPecas()">Peças</button>
+<button class="btn btn-dark btn-sm" onclick="toggleDarkMode()">🌙</button>
 </div>
 
 </div>
 
-<div class="card-body p-4">
+<div class="card-body">
 
-<div class="row g-3">
+<!-- CLIENTES -->
 
-<div class="col-md-4">
-<input type="text" id="nome" class="form-control" placeholder="Nome">
+<div id="telaClientes">
+
+<h4>👥 Cadastro de Clientes</h4>
+
+<div class="row g-2 mb-3">
+
+<div class="col-md-3">
+<input id="nomeCliente" class="form-control" placeholder="Nome">
 </div>
 
-<div class="col-md-4">
-<input type="email" id="email" class="form-control" placeholder="Email">
+<div class="col-md-3">
+<input id="emailCliente" class="form-control" placeholder="Email">
 </div>
 
-<div class="col-md-2">
-<button id="btnAdicionar" onclick="adicionar()" class="btn btn-success w-100">
-Adicionar
-</button>
+<div class="col-md-3">
+<input id="telefoneCliente" class="form-control" placeholder="Telefone">
 </div>
 
-<div class="col-md-2">
-<input type="text" id="buscar" class="form-control" placeholder="🔎 Buscar" onkeyup="buscarCliente()">
+<div class="col-md-3">
+<button class="btn btn-success w-100" onclick="adicionarCliente()">Adicionar</button>
 </div>
-
-</div>
-
-<hr>
-
-<div class="mb-3">
-
-<button class="btn btn-primary btn-sm me-2" onclick="exportarClientes()">
-📥 Exportar Clientes
-</button>
-
-<button class="btn btn-secondary btn-sm"
-onclick="document.getElementById('importarBackup').click()">
-📤 Importar Backup
-</button>
-
-<input type="file" id="importarBackup" style="display:none" onchange="importarClientes(event)">
-
-<span class="ms-3">
-Clientes cadastrados: <strong id="contadorClientes">0</strong>
-</span>
 
 </div>
 
-<table class="table table-striped align-middle">
+<input id="buscarCliente" class="form-control mb-3" placeholder="🔎 Buscar cliente" onkeyup="atualizarTabelaClientes()">
+
+<table class="table table-striped">
 
 <thead class="table-dark">
-
 <tr>
 <th>ID</th>
 <th>Nome</th>
 <th>Email</th>
-<th>Data Criação</th>
+<th>Telefone</th>
 <th>Ações</th>
 </tr>
-
 </thead>
 
 <tbody id="tabelaClientes"></tbody>
@@ -169,192 +95,132 @@ Clientes cadastrados: <strong id="contadorClientes">0</strong>
 </table>
 
 </div>
+
+
+<!-- PEÇAS -->
+
+<div id="telaPecas" style="display:none">
+
+<h4>🔧 Cadastro de Peças</h4>
+
+<div class="row g-2 mb-3">
+
+<div class="col-md-3">
+<input id="nomePeca" class="form-control" placeholder="Nome da peça">
+</div>
+
+<div class="col-md-3">
+<input id="marcaPeca" class="form-control" placeholder="Marca">
+</div>
+
+<div class="col-md-3">
+<input id="modeloPeca" class="form-control" placeholder="Modelo">
+</div>
+
+<div class="col-md-2">
+<input id="seriePeca" class="form-control" placeholder="Série">
+</div>
+
+<div class="col-md-1">
+<button class="btn btn-success w-100" onclick="adicionarPeca()">+</button>
+</div>
+
+</div>
+
+<input id="buscarPeca" class="form-control mb-3" placeholder="🔎 Buscar peça" onkeyup="atualizarTabelaPecas()">
+
+<table class="table table-striped">
+
+<thead class="table-dark">
+<tr>
+<th>ID</th>
+<th>Nome</th>
+<th>Marca</th>
+<th>Modelo</th>
+<th>Série</th>
+<th>Ações</th>
+</tr>
+</thead>
+
+<tbody id="tabelaPecas"></tbody>
+
+</table>
+
+</div>
+
 </div>
 </div>
 </div>
 
 <script>
 
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-let clientes = JSON.parse(localStorage.getItem("clientes")) || [];
-let editandoId = null;
-
-const btnAdicionar = document.getElementById("btnAdicionar");
+let clientes = JSON.parse(localStorage.getItem("clientes")) || []
+let pecas = JSON.parse(localStorage.getItem("pecas")) || []
 
 function toggleDarkMode(){
-document.body.classList.toggle("dark-mode");
+document.body.classList.toggle("dark-mode")
 }
 
-function mostrarCadastro(){
-telaLogin.style.display="none";
-telaCadastro.style.display="block";
+function mostrarClientes(){
+telaClientes.style.display="block"
+telaPecas.style.display="none"
 }
 
-function voltarLogin(){
-telaCadastro.style.display="none";
-telaLogin.style.display="block";
+function mostrarPecas(){
+telaClientes.style.display="none"
+telaPecas.style.display="block"
 }
 
-function mostrarSistema(){
-telaLogin.style.display="none";
-telaCadastro.style.display="none";
-sistema.style.display="block";
-
-usuarioLogado.innerText="👤 "+localStorage.getItem("logado");
+function salvar(){
+localStorage.setItem("clientes",JSON.stringify(clientes))
+localStorage.setItem("pecas",JSON.stringify(pecas))
 }
 
-function verificarLogin(){
-if(localStorage.getItem("logado")) mostrarSistema();
-}
+function adicionarCliente(){
 
-function criarUsuario(){
+let nome=nomeCliente.value
+let email=emailCliente.value
+let telefone=telefoneCliente.value
 
-let usuario=document.getElementById("novoUsuario").value.trim();
-let senha=document.getElementById("novaSenha").value.trim();
+if(!nome||!email)return alert("Preencha os campos")
 
-if(!usuario||!senha) return alert("Preencha todos os campos!");
+let id=clientes.length?clientes[clientes.length-1].id+1:1
 
-if(usuarios.find(u=>u.usuario===usuario))
-return alert("Usuário já existe!");
+clientes.push({id,nome,email,telefone})
 
-usuarios.push({usuario,senha});
+salvar()
 
-localStorage.setItem("usuarios",JSON.stringify(usuarios));
+nomeCliente.value=""
+emailCliente.value=""
+telefoneCliente.value=""
 
-alert("Usuário criado com sucesso!");
-
-voltarLogin();
+atualizarTabelaClientes()
 
 }
 
-function login(){
+function atualizarTabelaClientes(){
 
-let usuario=document.getElementById("usuarioLogin").value.trim();
-let senha=document.getElementById("senhaLogin").value.trim();
+let busca=buscarCliente.value.toLowerCase()
 
-let usuarioValido=usuarios.find(
-u=>u.usuario===usuario && u.senha===senha
-);
+tabelaClientes.innerHTML=""
 
-if(usuarioValido){
+clientes
+.filter(c=>c.nome.toLowerCase().includes(busca))
+.forEach(c=>{
 
-localStorage.setItem("logado",usuario);
-
-mostrarSistema();
-
-}else{
-
-alert("Usuário ou senha inválidos!");
-
-}
-
-}
-
-function logout(){
-localStorage.removeItem("logado");
-location.reload();
-}
-
-function salvarLocal(){
-
-localStorage.setItem("clientes",JSON.stringify(clientes));
-
-}
-
-function formatarData(){
-
-return new Date().toLocaleString("pt-BR");
-
-}
-
-function adicionar(){
-
-let nomeInput=document.getElementById("nome");
-let emailInput=document.getElementById("email");
-
-if(!nomeInput.value.trim()||!emailInput.value.trim())
-return alert("Preencha todos os campos!");
-
-if(editandoId!==null){
-
-let cliente=clientes.find(c=>c.id===editandoId);
-
-cliente.nome=nomeInput.value;
-cliente.email=emailInput.value;
-
-editandoId=null;
-
-btnAdicionar.innerText="Adicionar";
-
-}else{
-
-let id=clientes.length>0
-?clientes[clientes.length-1].id+1
-:1;
-
-clientes.push({
-
-id,
-nome:nomeInput.value,
-email:emailInput.value,
-dataCriacao:formatarData()
-
-});
-
-}
-
-salvarLocal();
-
-atualizarTabela();
-
-nomeInput.value="";
-emailInput.value="";
-
-}
-
-function atualizarTabela(){
-
-let tabela=document.getElementById("tabelaClientes");
-
-tabela.innerHTML="";
-
-let busca=document.getElementById("buscar").value.toLowerCase();
-
-let filtrados=clientes.filter(c=>
-
-c.nome.toLowerCase().includes(busca) ||
-
-c.email.toLowerCase().includes(busca)
-
-);
-
-document.getElementById("contadorClientes").innerText=clientes.length;
-
-filtrados.forEach(cliente=>{
-
-tabela.innerHTML+=`
+tabelaClientes.innerHTML+=`
 
 <tr>
 
-<td>${cliente.id}</td>
-
-<td>${cliente.nome}</td>
-
-<td>${cliente.email}</td>
-
-<td>${cliente.dataCriacao||"-"}</td>
+<td>${c.id}</td>
+<td>${c.nome}</td>
+<td>${c.email}</td>
+<td>${c.telefone}</td>
 
 <td>
 
-<button class="btn btn-warning btn-sm me-1"
-onclick="editar(${cliente.id})">
-
-Editar
-
-</button>
-
 <button class="btn btn-danger btn-sm"
-onclick="deletar(${cliente.id})">
+onclick="excluirCliente(${c.id})">
 
 Excluir
 
@@ -364,97 +230,104 @@ Excluir
 
 </tr>
 
-`;
+`
 
-});
-
-}
-
-function buscarCliente(){
-
-atualizarTabela();
+})
 
 }
 
-function editar(id){
+function excluirCliente(id){
 
-let cliente=clientes.find(c=>c.id===id);
+if(!confirm("Excluir cliente?"))return
 
-document.getElementById("nome").value=cliente.nome;
+clientes=clientes.filter(c=>c.id!==id)
 
-document.getElementById("email").value=cliente.email;
+salvar()
 
-editandoId=id;
-
-btnAdicionar.innerText="Atualizar";
+atualizarTabelaClientes()
 
 }
 
-function deletar(id){
+function adicionarPeca(){
 
-if(!confirm("Deseja realmente excluir?")) return;
+let nome=nomePeca.value
+let marca=marcaPeca.value
+let modelo=modeloPeca.value
+let serie=seriePeca.value
 
-clientes=clientes.filter(c=>c.id!==id);
+if(!nome)return alert("Preencha o nome")
 
-salvarLocal();
+let id=pecas.length?pecas[pecas.length-1].id+1:1
 
-atualizarTabela();
+pecas.push({id,nome,marca,modelo,serie})
 
-}
+salvar()
 
-function exportarClientes(){
+nomePeca.value=""
+marcaPeca.value=""
+modeloPeca.value=""
+seriePeca.value=""
 
-let dados=JSON.stringify(clientes,null,2);
-
-let blob=new Blob([dados],{type:"application/json"});
-
-let link=document.createElement("a");
-
-link.href=URL.createObjectURL(blob);
-
-link.download="backup_clientes.json";
-
-link.click();
+atualizarTabelaPecas()
 
 }
 
-function importarClientes(event){
+function atualizarTabelaPecas(){
 
-let arquivo=event.target.files[0];
+let busca=buscarPeca.value.toLowerCase()
 
-if(!arquivo) return;
+tabelaPecas.innerHTML=""
 
-let leitor=new FileReader();
+pecas
+.filter(p=>p.nome.toLowerCase().includes(busca))
+.forEach(p=>{
 
-leitor.onload=function(e){
+tabelaPecas.innerHTML+=`
 
-try{
+<tr>
 
-clientes=JSON.parse(e.target.result);
+<td>${p.id}</td>
+<td>${p.nome}</td>
+<td>${p.marca}</td>
+<td>${p.modelo}</td>
+<td>${p.serie}</td>
 
-salvarLocal();
+<td>
 
-atualizarTabela();
+<button class="btn btn-danger btn-sm"
+onclick="excluirPeca(${p.id})">
 
-alert("Backup importado com sucesso!");
+Excluir
 
-}catch{
+</button>
 
-alert("Arquivo inválido!");
+</td>
+
+</tr>
+
+`
+
+})
 
 }
 
-};
+function excluirPeca(id){
 
-leitor.readAsText(arquivo);
+if(!confirm("Excluir peça?"))return
+
+pecas=pecas.filter(p=>p.id!==id)
+
+salvar()
+
+atualizarTabelaPecas()
 
 }
 
-verificarLogin();
-
-atualizarTabela();
+atualizarTabelaClientes()
+atualizarTabelaPecas()
 
 </script>
 
 </body>
 </html>
+```
