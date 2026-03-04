@@ -2,23 +2,20 @@
 <html lang="pt-br">
 
 <head>
-
 <meta charset="UTF-8">
-<title>Sistema Oficina V2</title>
+<title>Sistema Oficina</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 
 body{
-font-family:'Poppins',sans-serif;
+font-family:Arial;
 background:linear-gradient(135deg,#667eea,#764ba2);
 }
 
 .card{
-border-radius:16px;
+border-radius:15px;
 }
 
 .dark-mode{
@@ -31,395 +28,38 @@ background:#1e1e1e;
 color:white;
 }
 
-.btn{
-border-radius:10px;
-}
-
 </style>
-
 </head>
-
 
 <body>
 
-<div class="container mt-5">
 
-<div class="card shadow-lg">
+<!-- LOGIN -->
 
-<div class="card-header bg-primary text-white d-flex justify-content-between">
+<div id="telaLogin" class="container mt-5" style="max-width:400px">
 
-<span>🔧 Sistema Oficina</span>
+<div class="card shadow">
 
-<div>
-
-<button class="btn btn-light btn-sm me-2" onclick="mostrarClientes()">Clientes</button>
-
-<button class="btn btn-light btn-sm me-2" onclick="mostrarPecas()">Peças</button>
-
-<button class="btn btn-dark btn-sm" onclick="toggleDarkMode()">🌙</button>
-
+<div class="card-header bg-dark text-white">
+Login do Sistema
 </div>
-
-</div>
-
 
 <div class="card-body">
 
+<input id="usuarioLogin" class="form-control mb-2" placeholder="Usuário">
 
-<!-- CLIENTES -->
+<input type="password" id="senhaLogin" class="form-control mb-3" placeholder="Senha">
 
-<div id="telaClientes">
+<button class="btn btn-success w-100 mb-2" onclick="login()">Entrar</button>
 
-<h4>👥 Cadastro de Clientes</h4>
+<button class="btn btn-secondary w-100" onclick="mostrarCadastro()">Criar Conta</button>
 
-
-<div class="row g-2 mb-3">
-
-<div class="col-md-3">
-<input id="nomeCliente" class="form-control" placeholder="Nome">
 </div>
 
-<div class="col-md-3">
-<input id="emailCliente" class="form-control" placeholder="Email">
-</div>
-
-<div class="col-md-3">
-<input id="telefoneCliente" class="form-control" placeholder="Telefone">
-</div>
-
-<div class="col-md-3">
-<button class="btn btn-success w-100" onclick="adicionarCliente()">Adicionar</button>
 </div>
 
 </div>
 
 
-<input id="buscarCliente" class="form-control mb-3" placeholder="🔎 Buscar cliente" onkeyup="atualizarTabelaClientes()">
-
-
-<table class="table table-striped">
-
-<thead class="table-dark">
-
-<tr>
-<th>ID</th>
-<th>Nome</th>
-<th>Email</th>
-<th>Telefone</th>
-<th>Ações</th>
-</tr>
-
-</thead>
-
-<tbody id="tabelaClientes"></tbody>
-
-</table>
-
-</div>
-
-
-<!-- PEÇAS -->
-
-<div id="telaPecas" style="display:none">
-
-<h4>🔧 Cadastro de Peças</h4>
-
-
-<div class="row g-2 mb-3">
-
-<div class="col-md-3">
-<input id="nomePeca" class="form-control" placeholder="Nome da peça">
-</div>
-
-<div class="col-md-3">
-<input id="marcaPeca" class="form-control" placeholder="Marca">
-</div>
-
-<div class="col-md-3">
-<input id="modeloPeca" class="form-control" placeholder="Modelo">
-</div>
-
-<div class="col-md-2">
-<input id="seriePeca" class="form-control" placeholder="Série">
-</div>
-
-<div class="col-md-1">
-<button class="btn btn-success w-100" onclick="adicionarPeca()">+</button>
-</div>
-
-</div>
-
-
-<input id="buscarPeca" class="form-control mb-3" placeholder="🔎 Buscar peça" onkeyup="atualizarTabelaPecas()">
-
-
-<table class="table table-striped">
-
-<thead class="table-dark">
-
-<tr>
-<th>ID</th>
-<th>Nome</th>
-<th>Marca</th>
-<th>Modelo</th>
-<th>Série</th>
-<th>Ações</th>
-</tr>
-
-</thead>
-
-<tbody id="tabelaPecas"></tbody>
-
-</table>
-
-</div>
-
-
-</div>
-</div>
-</div>
-
-
-<script>
-
-
-let clientes = JSON.parse(localStorage.getItem("clientes")) || []
-let pecas = JSON.parse(localStorage.getItem("pecas")) || []
-
-
-function toggleDarkMode(){
-
-document.body.classList.toggle("dark-mode")
-
-}
-
-
-function mostrarClientes(){
-
-document.getElementById("telaClientes").style.display="block"
-
-document.getElementById("telaPecas").style.display="none"
-
-}
-
-
-function mostrarPecas(){
-
-document.getElementById("telaClientes").style.display="none"
-
-document.getElementById("telaPecas").style.display="block"
-
-}
-
-
-function salvar(){
-
-localStorage.setItem("clientes",JSON.stringify(clientes))
-
-localStorage.setItem("pecas",JSON.stringify(pecas))
-
-}
-
-
-
-function adicionarCliente(){
-
-let nome=document.getElementById("nomeCliente").value
-
-let email=document.getElementById("emailCliente").value
-
-let telefone=document.getElementById("telefoneCliente").value
-
-
-if(!nome || !email) return alert("Preencha os campos")
-
-
-let id = clientes.length ? clientes[clientes.length-1].id+1 : 1
-
-
-clientes.push({
-
-id,
-nome,
-email,
-telefone
-
-})
-
-
-salvar()
-
-
-document.getElementById("nomeCliente").value=""
-document.getElementById("emailCliente").value=""
-document.getElementById("telefoneCliente").value=""
-
-atualizarTabelaClientes()
-
-}
-
-
-
-function atualizarTabelaClientes(){
-
-let busca=document.getElementById("buscarCliente").value.toLowerCase()
-
-let tabela=document.getElementById("tabelaClientes")
-
-tabela.innerHTML=""
-
-
-clientes
-.filter(c=>c.nome.toLowerCase().includes(busca))
-.forEach(c=>{
-
-tabela.innerHTML+=`
-
-<tr>
-
-<td>${c.id}</td>
-<td>${c.nome}</td>
-<td>${c.email}</td>
-<td>${c.telefone}</td>
-
-<td>
-
-<button class="btn btn-danger btn-sm"
-onclick="excluirCliente(${c.id})">
-
-Excluir
-
-</button>
-
-</td>
-
-</tr>
-
-`
-
-})
-
-}
-
-
-
-function excluirCliente(id){
-
-if(!confirm("Excluir cliente?")) return
-
-clientes = clientes.filter(c=>c.id!==id)
-
-salvar()
-
-atualizarTabelaClientes()
-
-}
-
-
-
-function adicionarPeca(){
-
-let nome=document.getElementById("nomePeca").value
-let marca=document.getElementById("marcaPeca").value
-let modelo=document.getElementById("modeloPeca").value
-let serie=document.getElementById("seriePeca").value
-
-
-if(!nome) return alert("Preencha o nome da peça")
-
-
-let id = pecas.length ? pecas[pecas.length-1].id+1 : 1
-
-
-pecas.push({
-
-id,
-nome,
-marca,
-modelo,
-serie
-
-})
-
-
-salvar()
-
-
-document.getElementById("nomePeca").value=""
-document.getElementById("marcaPeca").value=""
-document.getElementById("modeloPeca").value=""
-document.getElementById("seriePeca").value=""
-
-atualizarTabelaPecas()
-
-}
-
-
-
-function atualizarTabelaPecas(){
-
-let busca=document.getElementById("buscarPeca").value.toLowerCase()
-
-let tabela=document.getElementById("tabelaPecas")
-
-tabela.innerHTML=""
-
-
-pecas
-.filter(p=>p.nome.toLowerCase().includes(busca))
-.forEach(p=>{
-
-tabela.innerHTML+=`
-
-<tr>
-
-<td>${p.id}</td>
-<td>${p.nome}</td>
-<td>${p.marca}</td>
-<td>${p.modelo}</td>
-<td>${p.serie}</td>
-
-<td>
-
-<button class="btn btn-danger btn-sm"
-onclick="excluirPeca(${p.id})">
-
-Excluir
-
-</button>
-
-</td>
-
-</tr>
-
-`
-
-})
-
-}
-
-
-
-function excluirPeca(id){
-
-if(!confirm("Excluir peça?")) return
-
-pecas = pecas.filter(p=>p.id!==id)
-
-salvar()
-
-atualizarTabelaPecas()
-
-}
-
-
-
-atualizarTabelaClientes()
-atualizarTabelaPecas()
-
-
-</script>
-
-</body>
-</html>
+<!--
 ```
