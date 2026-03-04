@@ -1,78 +1,130 @@
+# 🔧 Sistema Oficina V4
 
-# 🔧 Sistema Oficina V2
+Sistema simples de gerenciamento para **oficinas mecânicas**, desenvolvido utilizando **HTML, CSS, JavaScript e Bootstrap**, funcionando totalmente **offline no navegador**.
 
-Sistema simples para **gerenciamento de clientes e peças de uma oficina mecânica**, desenvolvido utilizando **HTML, CSS, JavaScript e Bootstrap**, funcionando totalmente **offline no navegador**.
+O sistema permite controlar **clientes, peças, ordens de serviço e faturamento**, sem necessidade de servidor ou banco de dados externo.
 
-O objetivo do projeto é criar um **CRUD simples e funcional**, sem necessidade de backend ou banco de dados externo.
-
-Todos os dados são armazenados utilizando **LocalStorage**.
-
----
-
-# 📸 Interface do Sistema
-
-O sistema possui duas áreas principais:
-
-## 👥 Cadastro de Clientes
-
-- Nome
-- Email
-- Telefone
-- Busca de clientes
-- Exclusão de registros
-
-## 🔧 Cadastro de Peças
-
-- Nome da peça
-- Marca
-- Modelo
-- Número de série
-- Busca de peças
-- Exclusão de registros
+Todos os dados são armazenados utilizando **LocalStorage do navegador**.
 
 ---
 
 # 🚀 Funcionalidades
 
-✔ Cadastro de clientes  
-✔ Cadastro de peças  
-✔ Busca dinâmica em tabelas  
-✔ Exclusão de registros  
-✔ Interface responsiva com Bootstrap  
-✔ Dark Mode 🌙  
-✔ Sistema totalmente **offline**
+## 🔐 Sistema de Login
+
+* Criar usuário
+* Login com usuário e senha
+* Logout do sistema
+* Usuários armazenados no LocalStorage
+
+---
+
+## 👥 Cadastro de Clientes
+
+Permite registrar clientes da oficina.
+
+Campos cadastrados:
+
+* Nome
+* Email
+* Telefone
+
+Funcionalidades:
+
+* Adicionar cliente
+* Listar clientes
+* Armazenamento automático
+
+---
+
+## 🔧 Cadastro de Peças / Controle de Estoque
+
+Controle básico de peças utilizadas na oficina.
+
+Campos:
+
+* Nome da peça
+* Marca
+* Modelo
+* Quantidade em estoque
+* Preço
+
+Funcionalidades:
+
+* Cadastro de peças
+* Controle de estoque
+* Visualização das peças cadastradas
+
+---
+
+## 📋 Ordem de Serviço
+
+Permite registrar serviços realizados na oficina.
+
+Campos:
+
+* Cliente
+* Descrição do serviço
+* Valor do serviço
+* Data automática
+
+Funcionalidades:
+
+* Criar ordem de serviço
+* Visualizar histórico de serviços
+
+---
+
+## 📊 Relatório Financeiro
+
+Painel simples de indicadores da oficina.
+
+Exibe:
+
+* Total de clientes cadastrados
+* Total de peças cadastradas
+* Total de serviços realizados
+* Faturamento total da oficina
+
+---
+
+## 🌙 Dark Mode
+
+O sistema possui suporte a **modo escuro**, podendo ser ativado pelo botão na interface.
 
 ---
 
 # 🧠 Como funciona
 
-O sistema utiliza o **LocalStorage do navegador** para armazenar os dados.
+O sistema utiliza **LocalStorage do navegador** como armazenamento de dados.
 
-Estrutura de armazenamento:
+Estrutura simplificada:
 
 ```json
 {
+  "usuarios": [],
   "clientes": [],
-  "pecas": []
+  "pecas": [],
+  "ordens": []
 }
 ```
 
-Isso permite utilizar o sistema sem:
+Isso permite executar o sistema:
 
-- banco de dados
-- servidor
-- conexão com internet
+* sem banco de dados
+* sem servidor
+* sem internet
 
 ---
 
 # 🖥️ Tecnologias Utilizadas
 
-| Tecnologia | Uso |
-|------------|-----|
-| HTML5 | Estrutura do sistema |
-| CSS3 | Estilização |
-| Bootstrap 5 | Layout responsivo |
-| JavaScript | Lógica da aplicação |
+| Tecnologia   | Uso                    |
+| ------------ | ---------------------- |
+| HTML5        | Estrutura da aplicação |
+| CSS3         | Estilização            |
+| Bootstrap 5  | Interface e layout     |
+| JavaScript   | Lógica da aplicação    |
 | LocalStorage | Armazenamento de dados |
 
 ---
@@ -82,72 +134,50 @@ Isso permite utilizar o sistema sem:
 ```
 sistema-oficina/
 │
-└── index.html
+├── index.html
+└── README.md
 ```
 
-Todo o sistema está concentrado em **um único arquivo HTML**, contendo:
+Todo o sistema está contido em **um único arquivo HTML**, contendo:
 
-- interface
-- estilos
-- scripts JavaScript
+* interface
+* estilos
+* scripts JavaScript
 
 ---
 
 # ▶️ Como Executar o Projeto
 
-### 1️⃣ Clone o repositório
+1️⃣ Baixe ou clone o projeto
 
 ```
 git clone https://github.com/seuusuario/sistema-oficina.git
 ```
 
-### 2️⃣ Abra o arquivo
+2️⃣ Abra o arquivo
 
 ```
 index.html
 ```
 
-### 3️⃣ O sistema será executado no navegador
+3️⃣ O sistema será executado no navegador.
 
-Não é necessário:
+Não é necessário instalar:
 
-- servidor
-- banco de dados
-- instalação de dependências
-
----
-
-# 🧪 Exemplo de Uso
-
-1️⃣ Acesse a aba **Clientes**  
-2️⃣ Cadastre um cliente
-
-```
-Nome: João Silva
-Email: joao@email.com
-Telefone: 99999-9999
-```
-
-3️⃣ Acesse a aba **Peças**
-
-```
-Peça: Filtro de óleo
-Marca: Bosch
-Modelo: X123
-Série: 2024
-```
+* servidor
+* banco de dados
+* dependências
 
 ---
 
-# 💡 Roadmap (Melhorias Futuras)
+# 💡 Possíveis Melhorias Futuras
 
-- [x] Sistema de login
-- [x] Controle de estoque
-- [x] Ordem de serviço
-- [x] Relatórios da oficina
-- [x] Exportação / Backup de dados
-- [ ] Integração com banco de dados real
-- [ ] Transformar em aplicativo desktop
+* [ ] Impressão de ordem de serviço
+* [ ] Geração de PDF
+* [ ] Backup automático
+* [ ] Gráficos financeiros
+* [ ] Banco de dados real
+* [ ] API backend
 
 ---
 
@@ -157,9 +187,9 @@ Série: 2024
 
 Desenvolvedor iniciante focado em:
 
-- JavaScript
-- Automação
-- Sistemas simples para negócios
+* JavaScript
+* Automação
+* Sistemas simples para negócios
 
 ---
 
@@ -167,4 +197,4 @@ Desenvolvedor iniciante focado em:
 
 Este projeto está sob licença **MIT**.
 
-Uso livre para aprendizado e melhorias.
+Uso livre para fins educacionais e melhorias.
