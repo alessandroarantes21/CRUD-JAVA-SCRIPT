@@ -4,7 +4,7 @@
 <head>
 
 <meta charset="UTF-8">
-<title>Sistema Oficina V3</title>
+<title>Sistema Oficina V4</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -27,6 +27,13 @@ color:white!important;
 .dark-mode .card{
 background:#1e1e1e;
 color:white;
+}
+
+.dashboard-card{
+text-align:center;
+padding:20px;
+font-size:20px;
+font-weight:bold;
 }
 
 </style>
@@ -97,6 +104,7 @@ Criar Usuário
 
 <div>
 
+<button class="btn btn-light btn-sm" onclick="mostrarDashboard()">Dashboard</button>
 <button class="btn btn-light btn-sm" onclick="mostrarClientes()">Clientes</button>
 <button class="btn btn-light btn-sm" onclick="mostrarPecas()">Peças</button>
 <button class="btn btn-light btn-sm" onclick="mostrarOS()">Ordem Serviço</button>
@@ -111,17 +119,54 @@ Criar Usuário
 
 <div class="card-body">
 
+<!-- DASHBOARD -->
+
+<div id="telaDashboard">
+
+<div class="row">
+
+<div class="col-md-3">
+<div class="card dashboard-card bg-success text-white">
+Clientes<br><span id="dClientes">0</span>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card dashboard-card bg-warning">
+Peças<br><span id="dPecas">0</span>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card dashboard-card bg-info text-white">
+Serviços<br><span id="dServicos">0</span>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card dashboard-card bg-dark text-white">
+Faturamento<br>R$ <span id="dValor">0</span>
+</div>
+</div>
+
+</div>
+
+</div>
+
 <!-- CLIENTES -->
 
-<div id="telaClientes">
+<div id="telaClientes" style="display:none">
 
 <h4>Clientes</h4>
+
+<input id="buscarCliente" class="form-control mb-2" placeholder="Buscar cliente" onkeyup="buscarClientes()">
 
 <input id="nomeCliente" class="form-control mb-2" placeholder="Nome">
 <input id="emailCliente" class="form-control mb-2" placeholder="Email">
 <input id="telefoneCliente" class="form-control mb-2" placeholder="Telefone">
 
-<button class="btn btn-success mb-3" onclick="adicionarCliente()">Adicionar</button>
+<button class="btn btn-success mb-2" onclick="adicionarCliente()">Adicionar</button>
+<button class="btn btn-secondary mb-3" onclick="limparCliente()">Limpar</button>
 
 <table class="table">
 
@@ -147,7 +192,7 @@ Criar Usuário
 
 <div id="telaPecas" style="display:none">
 
-<h4>Peças / Estoque</h4>
+<h4>Peças</h4>
 
 <input id="nomePeca" class="form-control mb-2" placeholder="Peça">
 <input id="marcaPeca" class="form-control mb-2" placeholder="Marca">
@@ -179,7 +224,7 @@ Criar Usuário
 
 </div>
 
-<!-- ORDEM DE SERVIÇO -->
+<!-- OS -->
 
 <div id="telaOS" style="display:none">
 
@@ -187,11 +232,11 @@ Criar Usuário
 
 <select id="clienteOS" class="form-control mb-2"></select>
 
-<input id="descricaoOS" class="form-control mb-2" placeholder="Descrição do serviço">
+<input id="descricaoOS" class="form-control mb-2" placeholder="Descrição">
 
-<input id="valorOS" class="form-control mb-2" placeholder="Valor do serviço">
+<input id="valorOS" class="form-control mb-2" placeholder="Valor">
 
-<button class="btn btn-success mb-3" onclick="criarOS()">Criar Ordem</button>
+<button class="btn btn-success mb-3" onclick="criarOS()">Criar OS</button>
 
 <table class="table">
 
@@ -213,11 +258,11 @@ Criar Usuário
 
 </div>
 
-<!-- RELATÓRIO -->
+<!-- RELATORIO -->
 
 <div id="telaRelatorio" style="display:none">
 
-<h4>Relatório Financeiro</h4>
+<h4>Relatório</h4>
 
 <p>Total Clientes: <span id="rClientes"></span></p>
 <p>Total Peças: <span id="rPecas"></span></p>
@@ -255,7 +300,7 @@ let valido=usuarios.find(u=>u.usuario===usuario && u.senha===senha)
 if(valido){
 telaLogin.style.display="none"
 sistema.style.display="block"
-mostrarClientes()
+mostrarDashboard()
 }else{
 alert("Login inválido")
 }
@@ -264,6 +309,24 @@ alert("Login inválido")
 
 function logout(){
 location.reload()
+}
+
+function mostrarDashboard(){
+
+esconderTelas()
+
+telaDashboard.style.display="block"
+
+dClientes.innerText=clientes.length
+dPecas.innerText=pecas.length
+dServicos.innerText=ordens.length
+
+let total=0
+
+ordens.forEach(o=>total+=Number(o.valor))
+
+dValor.innerText=total
+
 }
 
 function criarUsuario(){
@@ -293,6 +356,7 @@ document.body.classList.toggle("dark-mode")
 }
 
 function esconderTelas(){
+telaDashboard.style.display="none"
 telaClientes.style.display="none"
 telaPecas.style.display="none"
 telaOS.style.display="none"
@@ -305,61 +369,21 @@ telaClientes.style.display="block"
 atualizarClientes()
 }
 
-function mostrarPecas(){
-esconderTelas()
-telaPecas.style.display="block"
-atualizarPecas()
-}
+function buscarClientes(){
 
-function mostrarOS(){
-esconderTelas()
-telaOS.style.display="block"
+let busca=buscarCliente.value.toLowerCase()
 
-clienteOS.innerHTML=""
+let filtrados=clientes.filter(c=>c.nome.toLowerCase().includes(busca))
 
-clientes.forEach(c=>{
-clienteOS.innerHTML+=`<option>${c.nome}</option>`
-})
-
-atualizarOS()
-}
-
-function mostrarRelatorio(){
-esconderTelas()
-telaRelatorio.style.display="block"
-
-rClientes.innerText=clientes.length
-rPecas.innerText=pecas.length
-rServicos.innerText=ordens.length
-
-let total=0
-ordens.forEach(o=>total+=Number(o.valor))
-
-rValor.innerText=total
+renderClientes(filtrados)
 
 }
 
-function adicionarCliente(){
-
-let id=Date.now()
-
-clientes.push({
-id,
-nome:nomeCliente.value,
-email:emailCliente.value,
-telefone:telefoneCliente.value
-})
-
-salvar()
-atualizarClientes()
-
-}
-
-function atualizarClientes(){
+function renderClientes(lista){
 
 tabelaClientes.innerHTML=""
 
-clientes.forEach((c,index)=>{
+lista.forEach((c,index)=>{
 
 tabelaClientes.innerHTML+=`
 <tr>
@@ -383,6 +407,41 @@ tabelaClientes.innerHTML+=`
 
 }
 
+function atualizarClientes(){
+renderClientes(clientes)
+}
+
+function limparCliente(){
+
+nomeCliente.value=""
+emailCliente.value=""
+telefoneCliente.value=""
+
+}
+
+function adicionarCliente(){
+
+let id=Date.now()
+
+clientes.push({
+
+id,
+nome:nomeCliente.value,
+email:emailCliente.value,
+telefone:telefoneCliente.value
+
+})
+
+salvar()
+
+limparCliente()
+
+atualizarClientes()
+
+mostrarDashboard()
+
+}
+
 function editarCliente(index){
 
 let c = clientes[index]
@@ -400,15 +459,22 @@ atualizarClientes()
 
 function excluirCliente(index){
 
-if(confirm("Deseja excluir este cliente?")){
+if(confirm("Excluir cliente?")){
 
 clientes.splice(index,1)
 
 salvar()
 atualizarClientes()
+mostrarDashboard()
 
 }
 
+}
+
+function mostrarPecas(){
+esconderTelas()
+telaPecas.style.display="block"
+atualizarPecas()
 }
 
 function adicionarPeca(){
@@ -416,16 +482,21 @@ function adicionarPeca(){
 let id=Date.now()
 
 pecas.push({
+
 id,
 nome:nomePeca.value,
 marca:marcaPeca.value,
 modelo:modeloPeca.value,
 estoque:estoquePeca.value,
 preco:precoPeca.value
+
 })
 
 salvar()
+
 atualizarPecas()
+
+mostrarDashboard()
 
 }
 
@@ -436,7 +507,9 @@ tabelaPecas.innerHTML=""
 pecas.forEach((p,index)=>{
 
 tabelaPecas.innerHTML+=`
+
 <tr>
+
 <td>${p.id}</td>
 <td>${p.nome}</td>
 <td>${p.marca}</td>
@@ -453,6 +526,7 @@ tabelaPecas.innerHTML+=`
 </td>
 
 </tr>
+
 `
 
 })
@@ -478,14 +552,34 @@ atualizarPecas()
 
 function excluirPeca(index){
 
-if(confirm("Deseja excluir esta peça?")){
+if(confirm("Excluir peça?")){
 
 pecas.splice(index,1)
 
 salvar()
 atualizarPecas()
 
+mostrarDashboard()
+
 }
+
+}
+
+function mostrarOS(){
+
+esconderTelas()
+
+telaOS.style.display="block"
+
+clienteOS.innerHTML=""
+
+clientes.forEach(c=>{
+
+clienteOS.innerHTML+=`<option>${c.nome}</option>`
+
+})
+
+atualizarOS()
 
 }
 
@@ -494,15 +588,20 @@ function criarOS(){
 let id=Date.now()
 
 ordens.push({
+
 id,
 cliente:clienteOS.value,
 servico:descricaoOS.value,
 valor:valorOS.value,
 data:new Date().toLocaleDateString()
+
 })
 
 salvar()
+
 atualizarOS()
+
+mostrarDashboard()
 
 }
 
@@ -513,16 +612,38 @@ tabelaOS.innerHTML=""
 ordens.forEach(o=>{
 
 tabelaOS.innerHTML+=`
+
 <tr>
+
 <td>${o.id}</td>
 <td>${o.cliente}</td>
 <td>${o.servico}</td>
 <td>${o.valor}</td>
 <td>${o.data}</td>
+
 </tr>
+
 `
 
 })
+
+}
+
+function mostrarRelatorio(){
+
+esconderTelas()
+
+telaRelatorio.style.display="block"
+
+rClientes.innerText=clientes.length
+rPecas.innerText=pecas.length
+rServicos.innerText=ordens.length
+
+let total=0
+
+ordens.forEach(o=>total+=Number(o.valor))
+
+rValor.innerText=total
 
 }
 
