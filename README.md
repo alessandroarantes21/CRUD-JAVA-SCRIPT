@@ -1,200 +1,189 @@
-# 🔧 Sistema Oficina V4
+# 🚛 Sistema Oficina V5
 
-Sistema simples de gerenciamento para **oficinas mecânicas**, desenvolvido utilizando **HTML, CSS, JavaScript e Bootstrap**, funcionando totalmente **offline no navegador**.
+Sistema simples de gestão para oficinas mecânicas desenvolvido em
+**HTML, JavaScript e LocalStorage**.
 
-O sistema permite controlar **clientes, peças, ordens de serviço e faturamento**, sem necessidade de servidor ou banco de dados externo.
+Este projeto demonstra a criação de um **CRUD completo em uma única
+página (Single Page Application)**, permitindo o gerenciamento de
+clientes, peças, ordens de serviço e relatórios.
 
-Todos os dados são armazenados utilizando **LocalStorage do navegador**.
+------------------------------------------------------------------------
 
----
+# 📦 Funcionalidades
 
-# 🚀 Funcionalidades
+## 🔐 Autenticação
 
-## 🔐 Sistema de Login
+-   Login de usuário
+-   Cadastro de novos usuários
+-   Sessão simples utilizando LocalStorage
 
-* Criar usuário
-* Login com usuário e senha
-* Logout do sistema
-* Usuários armazenados no LocalStorage
+------------------------------------------------------------------------
 
----
+## 📊 Dashboard
 
-## 👥 Cadastro de Clientes
+Painel inicial com indicadores do sistema:
 
-Permite registrar clientes da oficina.
+-   Total de clientes
+-   Total de peças
+-   Total de serviços realizados
+-   Faturamento total
 
-Campos cadastrados:
+Inclui também **gráfico de faturamento** usando Chart.js.
 
-* Nome
-* Email
-* Telefone
+------------------------------------------------------------------------
 
-Funcionalidades:
+## 👤 Cadastro de Clientes
 
-* Adicionar cliente
-* Listar clientes
-* Armazenamento automático
+Gerenciamento completo de clientes da oficina.
 
----
+Funções: - Cadastrar cliente - Editar cliente - Excluir cliente - Buscar
+cliente em tempo real
 
-## 🔧 Cadastro de Peças / Controle de Estoque
+Campos: - Nome - Email - Telefone
 
-Controle básico de peças utilizadas na oficina.
+------------------------------------------------------------------------
 
-Campos:
+## 🔧 Cadastro de Peças
 
-* Nome da peça
-* Marca
-* Modelo
-* Quantidade em estoque
-* Preço
+Controle básico de estoque da oficina.
 
-Funcionalidades:
+Funções: - Cadastrar peça - Editar peça - Excluir peça
 
-* Cadastro de peças
-* Controle de estoque
-* Visualização das peças cadastradas
+Campos: - Nome da peça - Marca - Modelo - Quantidade em estoque - Preço
 
----
+------------------------------------------------------------------------
 
-## 📋 Ordem de Serviço
+## 🧾 Ordem de Serviço
 
-Permite registrar serviços realizados na oficina.
+Registro de serviços realizados na oficina.
 
-Campos:
+Campos: - Cliente - Descrição do serviço - Valor do serviço - Data
+automática
 
-* Cliente
-* Descrição do serviço
-* Valor do serviço
-* Data automática
+Funções: - Criar ordem de serviço - Visualizar lista de serviços -
+Imprimir ordem de serviço
 
-Funcionalidades:
+------------------------------------------------------------------------
 
-* Criar ordem de serviço
-* Visualizar histórico de serviços
+## 📈 Relatório Financeiro
 
----
+Tela com resumo geral do sistema:
 
-## 📊 Relatório Financeiro
+-   Total de clientes
+-   Total de peças
+-   Total de serviços
+-   Faturamento geral
 
-Painel simples de indicadores da oficina.
+------------------------------------------------------------------------
 
-Exibe:
+## 📊 Gráfico de Faturamento
 
-* Total de clientes cadastrados
-* Total de peças cadastradas
-* Total de serviços realizados
-* Faturamento total da oficina
+Implementado com **Chart.js**, exibindo o faturamento total diretamente
+no dashboard.
 
----
+------------------------------------------------------------------------
 
-## 🌙 Dark Mode
+## 💾 Backup e Restauração
 
-O sistema possui suporte a **modo escuro**, podendo ser ativado pelo botão na interface.
+O sistema permite:
 
----
+### Exportar Backup
 
-# 🧠 Como funciona
+Baixa um arquivo:
 
-O sistema utiliza **LocalStorage do navegador** como armazenamento de dados.
+backup_oficina.json
 
-Estrutura simplificada:
+Contendo: - clientes - peças - ordens de serviço
 
-```json
-{
-  "usuarios": [],
-  "clientes": [],
-  "pecas": [],
-  "ordens": []
-}
-```
+### Restaurar Backup
 
-Isso permite executar o sistema:
+Importa novamente os dados do sistema através do arquivo JSON.
 
-* sem banco de dados
-* sem servidor
-* sem internet
+------------------------------------------------------------------------
 
----
+# 🧱 Estrutura do Projeto
 
-# 🖥️ Tecnologias Utilizadas
-
-| Tecnologia   | Uso                    |
-| ------------ | ---------------------- |
-| HTML5        | Estrutura da aplicação |
-| CSS3         | Estilização            |
-| Bootstrap 5  | Interface e layout     |
-| JavaScript   | Lógica da aplicação    |
-| LocalStorage | Armazenamento de dados |
-
----
-
-# 📂 Estrutura do Projeto
-
-```
 sistema-oficina/
-│
-├── index.html
-└── README.md
-```
 
-Todo o sistema está contido em **um único arquivo HTML**, contendo:
+index.html\
+README.md
 
-* interface
-* estilos
-* scripts JavaScript
+Todo o sistema está concentrado no arquivo:
 
----
-
-# ▶️ Como Executar o Projeto
-
-1️⃣ Baixe ou clone o projeto
-
-```
-git clone https://github.com/seuusuario/sistema-oficina.git
-```
-
-2️⃣ Abra o arquivo
-
-```
 index.html
-```
 
-3️⃣ O sistema será executado no navegador.
+Que contém: - HTML (interface) - CSS (estilo) - JavaScript (lógica do
+sistema)
 
-Não é necessário instalar:
+------------------------------------------------------------------------
 
-* servidor
-* banco de dados
-* dependências
+# 💻 Tecnologias Utilizadas
 
----
+-   HTML5
+-   CSS3
+-   JavaScript
+-   Bootstrap 5
+-   Chart.js
+-   LocalStorage
 
-# 💡 Possíveis Melhorias Futuras
+------------------------------------------------------------------------
 
-* [ ] Impressão de ordem de serviço
-* [ ] Geração de PDF
-* [ ] Backup automático
-* [ ] Gráficos financeiros
-* [ ] Banco de dados real
-* [ ] API backend
+# 🚀 Como Executar o Projeto
 
----
+## 1. Baixar o projeto
 
-# 👨‍💻 Autor
+Faça download do projeto ou clone o repositório.
 
-**Alessandro Arantes**
+## 2. Abrir no VS Code
 
-Desenvolvedor iniciante focado em:
+Abra a pasta do projeto:
 
-* JavaScript
-* Automação
-* Sistemas simples para negócios
+File → Open Folder
 
----
+## 3. Executar
+
+Abra o arquivo:
+
+index.html
+
+Ou utilize a extensão **Live Server** no VS Code.
+
+------------------------------------------------------------------------
+
+# 🧠 Conceitos Utilizados
+
+Este projeto demonstra vários conceitos importantes:
+
+-   CRUD com JavaScript
+-   Manipulação do DOM
+-   Armazenamento com LocalStorage
+-   Single Page Application (SPA)
+-   Dashboard com gráficos
+-   Exportação de dados JSON
+
+------------------------------------------------------------------------
+
+# 🔮 Melhorias Futuras
+
+Possíveis evoluções do sistema:
+
+-   Cadastro de caminhões
+-   Controle automático de estoque
+-   Geração de PDF da ordem de serviço
+-   Gráfico de faturamento mensal
+-   Sistema multiusuário
+-   Banco de dados MySQL
+-   Backend com Node.js
+
+------------------------------------------------------------------------
 
 # 📜 Licença
 
-Este projeto está sob licença **MIT**.
+Projeto livre para estudo e aprendizado.
 
-Uso livre para fins educacionais e melhorias.
+------------------------------------------------------------------------
+
+# 👨‍💻 Autor
+
+Projeto criado como estudo para desenvolvimento de um **mini ERP de
+oficina mecânica**.
