@@ -132,6 +132,7 @@ Criar Usuário
 <th>Nome</th>
 <th>Email</th>
 <th>Telefone</th>
+<th>Ações</th>
 </tr>
 
 </thead>
@@ -167,6 +168,7 @@ Criar Usuário
 <th>Modelo</th>
 <th>Estoque</th>
 <th>Preço</th>
+<th>Ações</th>
 </tr>
 
 </thead>
@@ -357,7 +359,7 @@ function atualizarClientes(){
 
 tabelaClientes.innerHTML=""
 
-clientes.forEach(c=>{
+clientes.forEach((c,index)=>{
 
 tabelaClientes.innerHTML+=`
 <tr>
@@ -365,10 +367,47 @@ tabelaClientes.innerHTML+=`
 <td>${c.nome}</td>
 <td>${c.email}</td>
 <td>${c.telefone}</td>
+
+<td>
+
+<button class="btn btn-warning btn-sm" onclick="editarCliente(${index})">Editar</button>
+
+<button class="btn btn-danger btn-sm" onclick="excluirCliente(${index})">Excluir</button>
+
+</td>
+
 </tr>
 `
 
 })
+
+}
+
+function editarCliente(index){
+
+let c = clientes[index]
+
+nomeCliente.value=c.nome
+emailCliente.value=c.email
+telefoneCliente.value=c.telefone
+
+clientes.splice(index,1)
+
+salvar()
+atualizarClientes()
+
+}
+
+function excluirCliente(index){
+
+if(confirm("Deseja excluir este cliente?")){
+
+clientes.splice(index,1)
+
+salvar()
+atualizarClientes()
+
+}
 
 }
 
@@ -394,7 +433,7 @@ function atualizarPecas(){
 
 tabelaPecas.innerHTML=""
 
-pecas.forEach(p=>{
+pecas.forEach((p,index)=>{
 
 tabelaPecas.innerHTML+=`
 <tr>
@@ -404,10 +443,49 @@ tabelaPecas.innerHTML+=`
 <td>${p.modelo}</td>
 <td>${p.estoque}</td>
 <td>${p.preco}</td>
+
+<td>
+
+<button class="btn btn-warning btn-sm" onclick="editarPeca(${index})">Editar</button>
+
+<button class="btn btn-danger btn-sm" onclick="excluirPeca(${index})">Excluir</button>
+
+</td>
+
 </tr>
 `
 
 })
+
+}
+
+function editarPeca(index){
+
+let p = pecas[index]
+
+nomePeca.value=p.nome
+marcaPeca.value=p.marca
+modeloPeca.value=p.modelo
+estoquePeca.value=p.estoque
+precoPeca.value=p.preco
+
+pecas.splice(index,1)
+
+salvar()
+atualizarPecas()
+
+}
+
+function excluirPeca(index){
+
+if(confirm("Deseja excluir esta peça?")){
+
+pecas.splice(index,1)
+
+salvar()
+atualizarPecas()
+
+}
 
 }
 
