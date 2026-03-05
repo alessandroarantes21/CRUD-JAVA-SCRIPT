@@ -4,9 +4,11 @@
 <head>
 
 <meta charset="UTF-8">
-<title>Sistema Oficina V4</title>
+<title>Sistema Oficina V5</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
@@ -42,8 +44,6 @@ font-weight:bold;
 
 <body>
 
-<!-- LOGIN -->
-
 <div id="telaLogin" class="container mt-5" style="max-width:400px">
 
 <div class="card shadow">
@@ -65,8 +65,6 @@ Login do Sistema
 </div>
 
 </div>
-
-<!-- CADASTRO -->
 
 <div id="telaCadastro" class="container mt-5" style="max-width:400px; display:none">
 
@@ -90,8 +88,6 @@ Criar Usuário
 
 </div>
 
-<!-- SISTEMA -->
-
 <div id="sistema" style="display:none">
 
 <div class="container mt-5">
@@ -110,6 +106,11 @@ Criar Usuário
 <button class="btn btn-light btn-sm" onclick="mostrarOS()">Ordem Serviço</button>
 <button class="btn btn-light btn-sm" onclick="mostrarRelatorio()">Relatório</button>
 
+<button class="btn btn-warning btn-sm" onclick="exportarBackup()">Backup</button>
+
+<input type="file" id="restaurarArquivo" style="display:none" onchange="importarBackup(event)">
+<button class="btn btn-secondary btn-sm" onclick="document.getElementById('restaurarArquivo').click()">Restaurar</button>
+
 <button class="btn btn-dark btn-sm" onclick="toggleDarkMode()">🌙</button>
 <button class="btn btn-danger btn-sm" onclick="logout()">Sair</button>
 
@@ -118,8 +119,6 @@ Criar Usuário
 </div>
 
 <div class="card-body">
-
-<!-- DASHBOARD -->
 
 <div id="telaDashboard">
 
@@ -150,6 +149,10 @@ Faturamento<br>R$ <span id="dValor">0</span>
 </div>
 
 </div>
+
+<br>
+
+<canvas id="graficoFaturamento"></canvas>
 
 </div>
 
@@ -200,7 +203,8 @@ Faturamento<br>R$ <span id="dValor">0</span>
 <input id="estoquePeca" class="form-control mb-2" placeholder="Quantidade">
 <input id="precoPeca" class="form-control mb-2" placeholder="Preço">
 
-<button class="btn btn-success mb-3" onclick="adicionarPeca()">Adicionar</button>
+<button class="btn btn-success mb-2" onclick="adicionarPeca()">Adicionar</button>
+<button class="btn btn-secondary mb-3" onclick="limparPeca()">Limpar</button>
 
 <table class="table">
 
@@ -248,6 +252,7 @@ Faturamento<br>R$ <span id="dValor">0</span>
 <th>Serviço</th>
 <th>Valor</th>
 <th>Data</th>
+<th>Ação</th>
 </tr>
 
 </thead>
@@ -284,10 +289,38 @@ let clientes = JSON.parse(localStorage.getItem("clientes")) || []
 let pecas = JSON.parse(localStorage.getItem("pecas")) || []
 let ordens = JSON.parse(localStorage.getItem("ordens")) || []
 
+let grafico
+
 function salvar(){
+
 localStorage.setItem("clientes",JSON.stringify(clientes))
 localStorage.setItem("pecas",JSON.stringify(pecas))
 localStorage.setItem("ordens",JSON.stringify(ordens))
+
+}
+
+function gerarGrafico(){
+
+let total=0
+ordens.forEach(o=>total+=Number(o.valor))
+
+let ctx=document.getElementById('graficoFaturamento')
+
+if(grafico){
+grafico.destroy()
+}
+
+grafico=new Chart(ctx,{
+type:'bar',
+data:{
+labels:['Faturamento'],
+datasets:[{
+label:'R$',
+data:[total]
+}]
+}
+})
+
 }
 
 function login(){
@@ -307,10 +340,6 @@ alert("Login inválido")
 
 }
 
-function logout(){
-location.reload()
-}
-
 function mostrarDashboard(){
 
 esconderTelas()
@@ -322,93 +351,12 @@ dPecas.innerText=pecas.length
 dServicos.innerText=ordens.length
 
 let total=0
-
 ordens.forEach(o=>total+=Number(o.valor))
 
 dValor.innerText=total
 
-}
+gerarGrafico()
 
-function criarUsuario(){
-
-usuarios.push({usuario:novoUsuario.value,senha:novaSenha.value})
-
-localStorage.setItem("usuarios",JSON.stringify(usuarios))
-
-alert("Usuário criado")
-
-voltarLogin()
-
-}
-
-function mostrarCadastro(){
-telaLogin.style.display="none"
-telaCadastro.style.display="block"
-}
-
-function voltarLogin(){
-telaCadastro.style.display="none"
-telaLogin.style.display="block"
-}
-
-function toggleDarkMode(){
-document.body.classList.toggle("dark-mode")
-}
-
-function esconderTelas(){
-telaDashboard.style.display="none"
-telaClientes.style.display="none"
-telaPecas.style.display="none"
-telaOS.style.display="none"
-telaRelatorio.style.display="none"
-}
-
-function mostrarClientes(){
-esconderTelas()
-telaClientes.style.display="block"
-atualizarClientes()
-}
-
-function buscarClientes(){
-
-let busca=buscarCliente.value.toLowerCase()
-
-let filtrados=clientes.filter(c=>c.nome.toLowerCase().includes(busca))
-
-renderClientes(filtrados)
-
-}
-
-function renderClientes(lista){
-
-tabelaClientes.innerHTML=""
-
-lista.forEach((c,index)=>{
-
-tabelaClientes.innerHTML+=`
-<tr>
-<td>${c.id}</td>
-<td>${c.nome}</td>
-<td>${c.email}</td>
-<td>${c.telefone}</td>
-
-<td>
-
-<button class="btn btn-warning btn-sm" onclick="editarCliente(${index})">Editar</button>
-
-<button class="btn btn-danger btn-sm" onclick="excluirCliente(${index})">Excluir</button>
-
-</td>
-
-</tr>
-`
-
-})
-
-}
-
-function atualizarClientes(){
-renderClientes(clientes)
 }
 
 function limparCliente(){
@@ -419,32 +367,58 @@ telefoneCliente.value=""
 
 }
 
+function limparPeca(){
+
+nomePeca.value=""
+marcaPeca.value=""
+modeloPeca.value=""
+estoquePeca.value=""
+precoPeca.value=""
+
+}
+
 function adicionarCliente(){
 
-let id=Date.now()
-
 clientes.push({
-
-id,
+id:Date.now(),
 nome:nomeCliente.value,
 email:emailCliente.value,
 telefone:telefoneCliente.value
-
 })
 
 salvar()
-
 limparCliente()
-
 atualizarClientes()
-
 mostrarDashboard()
+
+}
+
+function atualizarClientes(){
+
+tabelaClientes.innerHTML=""
+
+clientes.forEach((c,index)=>{
+
+tabelaClientes.innerHTML+=`
+<tr>
+<td>${c.id}</td>
+<td>${c.nome}</td>
+<td>${c.email}</td>
+<td>${c.telefone}</td>
+<td>
+<button class="btn btn-warning btn-sm" onclick="editarCliente(${index})">Editar</button>
+<button class="btn btn-danger btn-sm" onclick="excluirCliente(${index})">Excluir</button>
+</td>
+</tr>
+`
+
+})
 
 }
 
 function editarCliente(index){
 
-let c = clientes[index]
+let c=clientes[index]
 
 nomeCliente.value=c.nome
 emailCliente.value=c.email
@@ -460,42 +434,38 @@ atualizarClientes()
 function excluirCliente(index){
 
 if(confirm("Excluir cliente?")){
-
 clientes.splice(index,1)
-
 salvar()
 atualizarClientes()
 mostrarDashboard()
-
 }
 
 }
 
-function mostrarPecas(){
+function mostrarClientes(){
+
 esconderTelas()
-telaPecas.style.display="block"
-atualizarPecas()
+
+telaClientes.style.display="block"
+
+atualizarClientes()
+
 }
 
 function adicionarPeca(){
 
-let id=Date.now()
-
 pecas.push({
-
-id,
+id:Date.now(),
 nome:nomePeca.value,
 marca:marcaPeca.value,
 modelo:modeloPeca.value,
 estoque:estoquePeca.value,
 preco:precoPeca.value
-
 })
 
 salvar()
-
+limparPeca()
 atualizarPecas()
-
 mostrarDashboard()
 
 }
@@ -507,26 +477,18 @@ tabelaPecas.innerHTML=""
 pecas.forEach((p,index)=>{
 
 tabelaPecas.innerHTML+=`
-
 <tr>
-
 <td>${p.id}</td>
 <td>${p.nome}</td>
 <td>${p.marca}</td>
 <td>${p.modelo}</td>
 <td>${p.estoque}</td>
 <td>${p.preco}</td>
-
 <td>
-
 <button class="btn btn-warning btn-sm" onclick="editarPeca(${index})">Editar</button>
-
 <button class="btn btn-danger btn-sm" onclick="excluirPeca(${index})">Excluir</button>
-
 </td>
-
 </tr>
-
 `
 
 })
@@ -535,7 +497,7 @@ tabelaPecas.innerHTML+=`
 
 function editarPeca(index){
 
-let p = pecas[index]
+let p=pecas[index]
 
 nomePeca.value=p.nome
 marcaPeca.value=p.marca
@@ -553,15 +515,56 @@ atualizarPecas()
 function excluirPeca(index){
 
 if(confirm("Excluir peça?")){
-
 pecas.splice(index,1)
-
 salvar()
 atualizarPecas()
+mostrarDashboard()
+}
 
+}
+
+function mostrarPecas(){
+
+esconderTelas()
+telaPecas.style.display="block"
+atualizarPecas()
+
+}
+
+function criarOS(){
+
+ordens.push({
+id:Date.now(),
+cliente:clienteOS.value,
+servico:descricaoOS.value,
+valor:valorOS.value,
+data:new Date().toLocaleDateString()
+})
+
+salvar()
+atualizarOS()
 mostrarDashboard()
 
 }
+
+function atualizarOS(){
+
+tabelaOS.innerHTML=""
+
+ordens.forEach(o=>{
+
+tabelaOS.innerHTML+=`
+<tr>
+<td>${o.id}</td>
+<td>${o.cliente}</td>
+<td>${o.servico}</td>
+<td>${o.valor}</td>
+<td>${o.data}</td>
+<td><button class="btn btn-primary btn-sm" onclick="window.print()">Imprimir</button></td>
+</tr>
+`
+
+})
 
 }
 
@@ -574,58 +577,54 @@ telaOS.style.display="block"
 clienteOS.innerHTML=""
 
 clientes.forEach(c=>{
-
 clienteOS.innerHTML+=`<option>${c.nome}</option>`
-
 })
 
 atualizarOS()
 
 }
 
-function criarOS(){
+function exportarBackup(){
 
-let id=Date.now()
+let dados={
+clientes,
+pecas,
+ordens
+}
 
-ordens.push({
+let blob=new Blob([JSON.stringify(dados)],{type:"application/json"})
+let link=document.createElement("a")
 
-id,
-cliente:clienteOS.value,
-servico:descricaoOS.value,
-valor:valorOS.value,
-data:new Date().toLocaleDateString()
+link.href=URL.createObjectURL(blob)
+link.download="backup_oficina.json"
 
-})
+link.click()
+
+}
+
+function importarBackup(e){
+
+let arquivo=e.target.files[0]
+
+let reader=new FileReader()
+
+reader.onload=function(){
+
+let dados=JSON.parse(reader.result)
+
+clientes=dados.clientes
+pecas=dados.pecas
+ordens=dados.ordens
 
 salvar()
 
-atualizarOS()
+alert("Backup restaurado")
 
 mostrarDashboard()
 
 }
 
-function atualizarOS(){
-
-tabelaOS.innerHTML=""
-
-ordens.forEach(o=>{
-
-tabelaOS.innerHTML+=`
-
-<tr>
-
-<td>${o.id}</td>
-<td>${o.cliente}</td>
-<td>${o.servico}</td>
-<td>${o.valor}</td>
-<td>${o.data}</td>
-
-</tr>
-
-`
-
-})
+reader.readAsText(arquivo)
 
 }
 
@@ -644,6 +643,16 @@ let total=0
 ordens.forEach(o=>total+=Number(o.valor))
 
 rValor.innerText=total
+
+}
+
+function esconderTelas(){
+
+telaDashboard.style.display="none"
+telaClientes.style.display="none"
+telaPecas.style.display="none"
+telaOS.style.display="none"
+telaRelatorio.style.display="none"
 
 }
 
